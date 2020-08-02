@@ -6,10 +6,12 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
+import CartScreen from '../screens/shop/CartScreen';
 
 const ProductsNavigator = createStackNavigator({
     ProductsOverview: ProductsOverviewScreen,
-    ProductDetails: ProductDetailScreen
+    ProductDetails: ProductDetailScreen,
+    Cart: CartScreen 
 }, {
     defaultNavigationOptions:{
         headerStyle:{

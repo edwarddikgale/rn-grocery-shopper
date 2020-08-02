@@ -1,7 +1,7 @@
 import Product from '../../models/product';
-import initialState, {ProductState} from './product.state';
+import initialState, {IProductState} from '../state/product.state';
 
-const productsReducer =  (state: ProductState = initialState, action: any) => {
+const productsReducer =  (state: IProductState = initialState, action: any) => {
     return state;
 }
 

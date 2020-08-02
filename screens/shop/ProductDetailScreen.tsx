@@ -1,8 +1,9 @@
 import React,{useCallback} from 'react';
 import {Text, View, ScrollView, Button, StyleSheet, Image} from 'react-native';
 import Product from '../../models/product';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import { HeaderTitle } from 'react-navigation-stack';
+import * as cartActions from '../../store/actions/cart.actions';
 
 const ProductDetailScreen = (props: any) =>{
     const {navigation} = props;
@@ -10,6 +11,8 @@ const ProductDetailScreen = (props: any) =>{
     const product = useSelector((state: any) => 
         state.products.availableProducts.find((p:any) => p.id === productId)) as Product;
     
+    const dispatch = useDispatch();
+
     useCallback(() =>
         props.navigation.setParams({
             productTitle: product.title
@@ -25,7 +28,7 @@ const ProductDetailScreen = (props: any) =>{
                 <View style={styles.actions}>
                     <Button 
                         title='Add to cart' 
-                        onPress={() => {}} />
+                        onPress={() => dispatch(cartActions.addToCart(product))} />
                 </View>
                 <Text style={styles.price}>${product.price}</Text>
                 <Text style={styles.description}>{product.description}</Text>
@@ -45,12 +48,14 @@ const styles = StyleSheet.create({
     },
     description:{
         fontSize: 14,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'open-sans'
     },
     price:{
         fontSize: 15,
         color: 'gray',
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'open-sans-bold'
     }
 
 });
