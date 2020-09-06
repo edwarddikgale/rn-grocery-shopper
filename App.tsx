@@ -5,13 +5,15 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 import productsReducer from './store/reducers/products.reducer';
 import cartReducer from './store/reducers/cart.reducer';
+import ordersReducer from './store/reducers/orders.reducer';
 import ShopNavigator from './navigation/ShopNavigator';
 import {AppLoading} from 'expo';
 import * as Font from 'expo-font';
 
 const rootReducer = combineReducers({
   products: productsReducer,
-  cart: cartReducer 
+  cart: cartReducer,
+  orders: ordersReducer 
 });
 
 const store = createStore(rootReducer);

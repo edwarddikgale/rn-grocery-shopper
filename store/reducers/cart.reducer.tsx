@@ -43,11 +43,7 @@ export default (state: ICartState = initialState, action: any) => {
                 }
             }   
         case CLEAR_CART:
-            return {
-                ...state,
-                items: {},
-                totalAmount: 0
-            }    
+            return initialState
     }
     return state;
 }

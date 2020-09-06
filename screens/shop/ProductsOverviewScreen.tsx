@@ -6,6 +6,7 @@ import { IAppState } from '../../store/state/app.state';
 import ProductItem from '../../components/shop/ProductItem';
 import * as cartActions from '../../store/actions/cart.actions';
 import HeaderButton from '../../components/ui/header-button';
+import {DrawerActions} from 'react-navigation-drawer';
 
 const ProductsOverviewScreen = (props:any) =>{
     const {navigation} = props;
@@ -50,10 +51,25 @@ ProductsOverviewScreen.navigationOptions = (navData: any) => {
                     title='cart' 
                     iconName={'md-cart'} 
                     onPress={() => {
+                        console.log('Navigate to cart...');
                         navData.navigation.navigate('Cart');
                     }}
                     />
-            </HeaderButtons>
+            </HeaderButtons>,
+        headerLeft : () => <HeaderButtons 
+                HeaderButtonComponent={HeaderButton}>
+
+                <Item 
+                    title='Menu' 
+                    iconName={'md-menu'} 
+                    onPress={() => {
+                        navData.navigation.dispatch(DrawerActions.toggleDrawer());
+                        console.log('hello...')
+                        //console.log(navData.navigation);
+                        //navData.navigation.toggleDrawer();
+                    }}
+                    />
+            </HeaderButtons>     
     }
 }
 

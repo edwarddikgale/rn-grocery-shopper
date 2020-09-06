@@ -4,6 +4,7 @@ import {Text, View, FlatList, Button, StyleSheet, Image} from 'react-native';
 import {IAppState} from '../../store/state/app.state';
 import {CardItem} from '../../models/cart-item';
 import {clearCart} from '../../store/actions/cart.actions';
+import * as ordersActions from '../../store/actions/orders.actions';
 import Colors from '../../constants/Colors';
 
 const CartScreen = (props:any) => {
@@ -44,7 +45,7 @@ const CartScreen = (props:any) => {
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>
                     Total: 
-                    <Text>${totalAmount} </Text></Text>
+                    <Text>${totalAmount.toFixed(2)} </Text></Text>
 
                 {   cartItems.length > 0 && 
                     <Button title="Clear Cart" color={Colors.accent} onPress={() =>{
@@ -52,7 +53,9 @@ const CartScreen = (props:any) => {
                     }} />
                 }   
                 {   cartItems.length > 0 &&  
-                    <Button title="Order Now" color={Colors.primary} onPress={() => {}} />
+                    <Button title="Order Now" color={Colors.primary} onPress={() => {
+                        dispatch(ordersActions.addOrder(cartItems, totalAmount));
+                    }} />
                 }
             </View>
             <View style={styles.cartItemsContainer}>
