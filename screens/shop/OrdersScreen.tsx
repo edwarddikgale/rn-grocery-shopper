@@ -25,11 +25,11 @@ const OrdersScreen = (props: any) => {
                 data={orders}
                 keyExtractor={item => item.id}
                 renderItem={({item, index}) => 
-                <OrderItem 
-                    data={item}
-                    index={index}
-                />              
-            }
+                    (<OrderItem 
+                        data={item}
+                        index={index}
+                    />)              
+                 }
          />
         </View>
     )

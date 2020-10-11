@@ -10,6 +10,8 @@ import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
 
+import ProductsManagerNavigator from './ProductTabNavigator';
+
 const defaultNavOptions = {
     headerStyle:{
         backgroundColor: Platform.OS === 'android'? Colors.primary: ''
@@ -33,7 +35,8 @@ const OrdersNavigator = createStackNavigator({
 
 const ShopNavigator = createDrawerNavigator({
     Products: ProductsNavigator,
-    Orders: OrdersNavigator
+    Orders: OrdersNavigator,
+    ManageProducts: ProductsManagerNavigator
 });
 
 export default createAppContainer(ShopNavigator);
