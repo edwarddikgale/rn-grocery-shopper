@@ -5,10 +5,19 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import ProductListScreen from '../screens/user/ProductListScreen';
 import CategoryListScreen from '../screens/user/CategoryListScreen';
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
+import { createStackNavigator } from 'react-navigation-stack';
+
+const ProductsNavigator = createStackNavigator({
+  Products: ProductListScreen
+});
+
+const CategoriesNavigator = createStackNavigator({
+  Categories: CategoryListScreen
+});
 
 const ProductTabNavigator =  createBottomTabNavigator({
-    Products: ProductListScreen,
-    Categories: CategoryListScreen
+    Products: ProductsNavigator,
+    Categories: CategoriesNavigator
 },
 {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -34,7 +43,7 @@ const ProductTabNavigator =  createBottomTabNavigator({
     tabBarOptions: {
       activeTintColor: 'tomato',
       inactiveTintColor: 'gray',
-    },
+    }
   }
 );
 

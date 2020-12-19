@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
+import SummaryCircle from '../../components/ui/summary-circle';
 
 const ProductItem = (props: any) => {
     let TouchableComponent: any = TouchableOpacity;
@@ -7,10 +8,11 @@ const ProductItem = (props: any) => {
         TouchableComponent = TouchableNativeFeedback
     }
 
-    const showImage = props.showImage? props.showImage: true;
+    const showImage = props.showImage? props.showImage: false;
+    const prodHeight = showImage? 300: 80;
 
     return( 
-        <View style={styles.product}>
+        <View style={{...styles.product, height: prodHeight}}>
             <View style={styles.touchable}>
             <TouchableComponent useForground onPress={props.onViewDetails}>
                 <View>
@@ -18,13 +20,15 @@ const ProductItem = (props: any) => {
                         showImage && 
                         <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
                     }
-                    <View style={styles.details}>
-                        <Text style={styles.title}>{props.item.title}</Text>
-                        <Text style={styles.price}>$ {props.item.price.toFixed(2)}</Text>
-                    </View>
-                    <View style={styles.actions}>
-                        <Button title='View Details' onPress={props.onViewDetails} />
-                        <Button title='To Cart' onPress={props.onAddToCart} />
+                    <View style={styles.textSummary}>
+                        <SummaryCircle 
+                            style={{marginTop: 5}}
+                            letters={props.item.title.substring(0,1)}
+                        />
+                        <View style={styles.details}>
+                            <Text style={styles.title}>{props.item.title}</Text>
+                            <Text style={styles.price}>$ {props.item.price.toFixed(2)}</Text>
+                        </View>
                     </View>
                 </View>
             </TouchableComponent>
@@ -35,16 +39,19 @@ const ProductItem = (props: any) => {
 
 const styles = StyleSheet.create({
     product:{
-        shadowColor: 'black',
+        /*shadowColor: 'black',
         shadowOpacity: 0.26,
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 8,
         elevation: 5,
-        borderRadius: 10,
+        borderRadius: 10,*/
         backgroundColor: 'white',
-        height: 300,
-        margin: 20,
+        marginHorizontal: 5,
         padding: 5
+    },
+    textSummary:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     touchable:{
         borderRadius: 10,
@@ -57,13 +64,16 @@ const styles = StyleSheet.create({
     },
     details:{
        width: '100%',
-       padding: 10,
-       height: '25%' 
+       padding: 10 
+    },
+    summaryCircle:{
+
     },
     title:{
         fontSize: 17,
         margin: 5,
-        fontFamily: 'open-sans-bold'
+        fontFamily: 'open-sans-bold',
+        fontWeight: 'bold'
     },
     price:{
         fontSize: 13,

@@ -1,4 +1,4 @@
-import {ADD_TO_CART, CLEAR_CART} from '../actions/cart.actions';
+import * as actionTypes from '../actions/cart.actions';
 import Product from '../../models/product';
 import {CardItem} from '../../models/cart-item';
 import ProductItem from '../../components/shop/ProductItem';
@@ -6,7 +6,7 @@ import initialState, {ICartState} from '../state/cart.state';
 
 export default (state: ICartState = initialState, action: any) => {
     switch(action.type){
-        case ADD_TO_CART:  
+        case actionTypes.ADD_TO_CART_SUCCESS:  
             const addedProduct:Product = {...action.payload};
 
             if(state.items[addedProduct.id]){
@@ -42,7 +42,7 @@ export default (state: ICartState = initialState, action: any) => {
                     count: state.count + 1
                 }
             }   
-        case CLEAR_CART:
+        case actionTypes.CLEAR_CART:
             return initialState
     }
     return state;

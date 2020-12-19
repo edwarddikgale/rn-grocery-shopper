@@ -1,23 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {View, Text, TextInput, StyleSheet, Button, FlatList, Modal, Alert, TouchableHighlight} from 'react-native';
-
-export interface IProductCategory{
-    id: string,
-    title: string
-}
+import UserProductsScreen from './UserProductsScreen';
+import LocalCache from '../../utils/local.cache';
+import { IProductCategory } from '../../models/product';
+import CategoryUpdate from '../../components/user/CategoryUpdate';
 
 const EditCategoryScreen = (props: any) => {
 
     const [categories, setCategories] = useState<IProductCategory[]>([]);
-    const [category, setCategory] = useState<IProductCategory>({} as IProductCategory);
+    //const [category, setCategory] = useState<IProductCategory>({} as IProductCategory);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [user, setUser] = useState<firebase.User>({} as unknown as firebase.User);
+    let cachedUser = {} as firebase.User;
 
-    const handleTextChange = (text: string) => {
-        setCategory({title: text, id: ''});
-    }
+    LocalCache.getData('user').then(data=> {
+        cachedUser = data as firebase.User; 
+        setUser(cachedUser);
+    })
+    
 
-    const handleOnAdd = () => { 
-
+    const onAddCategoryHandler = (category: IProductCategory) => { 
+        
+        //setCategory(data);
         const matches = categories.filter(cat => cat.title === category.title);
         if(!category || !category.title || category.title.length == 0) return;
 
@@ -25,11 +29,11 @@ const EditCategoryScreen = (props: any) => {
         const newCat: IProductCategory = {...category, id:newId};
 
         setCategories(categories => categories.concat([newCat]));
-        setCategory({} as IProductCategory);
+        //setCategory({} as IProductCategory);
         setModalVisible(false);
     }
 
-    const cancelModal = () => { setModalVisible(false);}
+    const cancelModal = () => { console.log('closing modal...'); setModalVisible(false);}
 
     const renderItem = (itemData: {item: IProductCategory}) => {
         
@@ -42,7 +46,6 @@ const EditCategoryScreen = (props: any) => {
 
     return (
         <View style={styles.screen}>
-            <Text>Edit Category</Text>
 
             <TouchableHighlight
                 style={styles.openButton}
@@ -60,29 +63,10 @@ const EditCategoryScreen = (props: any) => {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <View>
-                            <TextInput 
-                                onChangeText={handleTextChange}
-                                value={category.title}
-                                style={{...styles.textInput, ...styles.fullInput}}
-                            />
-                            
-                        </View>
-                        <View style={styles.inputGroup}>
-                            <View style={styles.button}>
-                                <Button 
-                                    title={'  CANCEL  '} 
-                                    color={'red'} 
-                                    onPress={cancelModal} /> 
-                            </View>
-                            <View style={styles.button}>
-                                <Button 
-                                    title={'  ADD +  '} 
-                                    onPress={handleOnAdd} 
-                                    disabled={!category || !category.title || category.title.length === 0}
-                                    />    
-                            </View>                           
-                        </View>
+                        <CategoryUpdate 
+                            onAdd={onAddCategoryHandler}
+                            onCancel={cancelModal}
+                        />
                     </View>
                 </View>
             </Modal>
@@ -100,7 +84,7 @@ const EditCategoryScreen = (props: any) => {
 
 const styles = StyleSheet.create({
     screen:{
-        margin: 40
+        margin: 10
     },
     inputGroup:{
         flexDirection: 'row',
@@ -113,7 +97,7 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     fullInput:{
-        width: 200
+        width: '95%'
     },
     category: {
         borderColor: '#d8dde6',
@@ -140,7 +124,7 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     modalView: {
-        margin: 20,
+        margin: 10,
         backgroundColor: "#fce6ff",
         borderRadius: 20,
         padding: 35,
@@ -153,7 +137,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 200
+        height: 200,
+        width: '90%'
     },  
     openButton: {
         backgroundColor: "#F194FF",

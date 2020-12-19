@@ -5,4 +5,10 @@ export default interface Product{
     imageUrl: string;
     description: string;
     price:number;
+    category:string;
+}
+
+export interface IProductCategory{
+    id: string,
+    title: string
 }

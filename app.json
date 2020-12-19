@@ -16,6 +16,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "facebookScheme": "fb684399708713036",
+    "facebookAppId": "372930443838250",
+    "facebookDisplayName": "Restock",
     "ios": {
       "supportsTablet": true
     },

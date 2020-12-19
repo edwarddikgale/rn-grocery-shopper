@@ -1,22 +1,31 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import { StyleSheet} from 'react-native';
-import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import productsReducer from './store/reducers/products.reducer';
-import cartReducer from './store/reducers/cart.reducer';
-import ordersReducer from './store/reducers/orders.reducer';
 import ShopNavigator from './navigation/ShopNavigator';
+import AuthNavigator from './navigation/AuthNavigator';
 import {AppLoading} from 'expo';
 import * as Font from 'expo-font';
+import * as firebase from 'firebase';
+import firebaseConfig from './config/firebase';
+import 'firebase/auth';
+import 'firebase/database';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
+import store from './store/rootStore'
 
-const rootReducer = combineReducers({
-  products: productsReducer,
-  cart: cartReducer,
-  orders: ordersReducer 
-});
+firebase.initializeApp(firebaseConfig);
 
-const store = createStore(rootReducer);
+const rrfConfig = {
+  userProfile: 'users'
+  // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
+};
+
+const rrfProps = {
+  firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch
+  // createFirestoreInstance // <- needed if using firestore
+}
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -35,7 +44,9 @@ export default function App() {
 
   return (
     <Provider store={store} >
-      <ShopNavigator />
+      <ReactReduxFirebaseProvider {...rrfProps}>
+        <AuthNavigator />
+      </ReactReduxFirebaseProvider>
     </Provider>
   );
 }

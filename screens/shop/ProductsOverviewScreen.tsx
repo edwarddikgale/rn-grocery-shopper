@@ -7,12 +7,19 @@ import ProductItem from '../../components/shop/ProductItem';
 import * as cartActions from '../../store/actions/cart.actions';
 import HeaderButton from '../../components/ui/header-button';
 import {DrawerActions} from 'react-navigation-drawer';
+import LocalCache from '../../utils/local.cache';
 
 const ProductsOverviewScreen = (props:any) =>{
     const {navigation} = props;
     const products = useSelector((state: IAppState) => state.products.availableProducts);
     const cartItemCount = useSelector((state: IAppState) => state.cart.count); 
     const dispatch = useDispatch();
+
+    let user: firebase.User;
+    LocalCache.getData('user').then(data => {
+        user = data;
+        console.log('user logged in as ' + user.uid);
+    });
 
     /*
     useCallback(() =>
@@ -21,22 +28,24 @@ const ProductsOverviewScreen = (props:any) =>{
         })
     , [navigation])*/
 
-    return <FlatList 
-        data={products} 
-        keyExtractor = {item => item.id}
-        renderItem={itemData =>
-            <ProductItem 
-                item={itemData.item}
-                onViewDetails={() => { 
-                   props.navigation.navigate('ProductDetails', {
-                       productId: itemData.item.id,
-                       productTitle: itemData.item.title
-                   })}
-                }
-                onAddToCart={()=> dispatch(cartActions.addToCart(itemData.item))}                
-            />
-        } 
+    return( 
+        <FlatList 
+            data={products} 
+            keyExtractor = {item => item.id}
+            renderItem={itemData =>
+                <ProductItem 
+                    item={itemData.item}
+                    onViewDetails={() => { 
+                    props.navigation.navigate('ProductDetails', {
+                        productId: itemData.item.id,
+                        productTitle: itemData.item.title
+                    })}
+                    }
+                    onAddToCart={()=> dispatch(cartActions.addToCart(user.uid, itemData.item))}                
+                />
+            } 
         />
+    )    
 }
 
 ProductsOverviewScreen.navigationOptions = (navData: any) => {
@@ -64,7 +73,6 @@ ProductsOverviewScreen.navigationOptions = (navData: any) => {
                     iconName={'md-menu'} 
                     onPress={() => {
                         navData.navigation.dispatch(DrawerActions.toggleDrawer());
-                        console.log('hello...')
                         //console.log(navData.navigation);
                         //navData.navigation.toggleDrawer();
                     }}

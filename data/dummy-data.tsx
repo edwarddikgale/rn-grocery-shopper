@@ -48,7 +48,15 @@ const PRODUCTS = [
     imageUrl: 'https://cdn.pixabay.com/photo/2015/10/03/02/14/pen-969298_1280.jpg',
     description: "Can be used for role-playing (not the kind of role-playing you're thinking about...).",
     price: 5.49
-  } as Product
+  } as Product,
+  {
+    id: 'p7',
+    ownerId: 'u1',
+    title: 'Bananas',
+    imageUrl: 'https://agfstorage.blob.core.windows.net/misc/AGF_nl/2020/01/16/franklin2.jpg',
+    description: "Fresh bananas for your muesli",
+    price: 5.49
+  } as Product  
 ];
 
 export default PRODUCTS;
