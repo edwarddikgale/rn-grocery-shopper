@@ -10,7 +10,7 @@ export interface IProductState{
 
 const initialState: IProductState = {
     availableProducts: PRODUCTS,
-    userProducts: PRODUCTS.filter(product => product.ownerId === 'u1' ),
+    userProducts: [],//PRODUCTS.filter(product => product.ownerId === 'u1' ),
     loading: false,
     error: ''
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
+import {View, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
 import SummaryCircle from '../../components/ui/summary-circle';
 
 const ProductItem = (props: any) => {
@@ -23,11 +23,11 @@ const ProductItem = (props: any) => {
                     <View style={styles.textSummary}>
                         <SummaryCircle 
                             style={{marginTop: 5}}
-                            letters={props.item.title.substring(0,1)}
+                            letters={props.item.title?.substring(0,1)}
                         />
                         <View style={styles.details}>
                             <Text style={styles.title}>{props.item.title}</Text>
-                            <Text style={styles.price}>$ {props.item.price.toFixed(2)}</Text>
+                            <Text style={styles.price}>$ {props.item.price?.toFixed(2)}</Text>
                         </View>
                     </View>
                 </View>
