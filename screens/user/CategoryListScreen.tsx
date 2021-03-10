@@ -1,41 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, TextInput, StyleSheet, Button, FlatList, Modal, Alert, TouchableHighlight} from 'react-native';
-import UserProductsScreen from './UserProductsScreen';
+import {useDispatch, useSelector} from 'react-redux';
+import {View, Text, StyleSheet, Button, FlatList, Modal, Alert, TouchableOpacity, ScrollView, TouchableWithoutFeedback, Dimensions} from 'react-native';
 import LocalCache from '../../utils/local.cache';
-import { IProductCategory } from '../../models/product';
+import ProductCategory from "../../models/productCategory";
+import * as actions from '../../store/actions/product.category.actions';
 import CategoryUpdate from '../../components/user/CategoryUpdate';
+import { IAppState } from '../../store/state/app.state';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import Colors from '../../constants/Colors';
+import CategoryCarousel from '../common/CategoryCarousel';
 
-const EditCategoryScreen = (props: any) => {
+const CategoryListScreen = (props: any) => {
 
-    const [categories, setCategories] = useState<IProductCategory[]>([]);
-    //const [category, setCategory] = useState<IProductCategory>({} as IProductCategory);
+    const categories = useSelector((state: IAppState) => state.categories.categories);
+    const [userId, setUserId] = useState<string>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const [user, setUser] = useState<firebase.User>({} as unknown as firebase.User);
+    
     let cachedUser = {} as firebase.User;
+    const dispatch = useDispatch();
 
-    LocalCache.getData('user').then(data=> {
-        cachedUser = data as firebase.User; 
-        setUser(cachedUser);
-    })
+    let user: firebase.User;
+    LocalCache.getData('user').then(data => { 
+        user = data;   
+        setUserId(user.uid);
+    });
+
+    useEffect(() => {
+        if(userId) {
+            dispatch(actions.getProductCategories(userId, {}));
+        }
+    }, [userId]);  
     
 
-    const onAddCategoryHandler = (category: IProductCategory) => { 
-        
-        //setCategory(data);
+    const onAddCategoryHandler = (category: ProductCategory) => { 
+
         const matches = categories.filter(cat => cat.title === category.title);
         if(!category || !category.title || category.title.length == 0) return;
 
-        const newId: string = Math.floor(Math.random() * 10000).toString();
-        const newCat: IProductCategory = {...category, id:newId};
-
-        setCategories(categories => categories.concat([newCat]));
-        //setCategory({} as IProductCategory);
-        setModalVisible(false);
+        if(userId){        
+            dispatch(actions.addProductCategory(userId, category));
+            setModalVisible(false);
+        }
     }
 
-    const cancelModal = () => { console.log('closing modal...'); setModalVisible(false);}
+    const cancelModal = () => { setModalVisible(false);}
 
-    const renderItem = (itemData: {item: IProductCategory}) => {
+    const renderItem = (itemData: {item: ProductCategory}) => {
         
         return (
             <View style={styles.category}>
@@ -47,44 +57,60 @@ const EditCategoryScreen = (props: any) => {
     return (
         <View style={styles.screen}>
 
-            <TouchableHighlight
-                style={styles.openButton}
-                onPress={() => {setModalVisible(modalVisible => !modalVisible);}}
-            >
-                <Text style={styles.textStyle}> + Add Category</Text>
-            </TouchableHighlight>
-            <Modal
+<Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => {
-                    setModalVisible(false)
-                }}
+                onRequestClose={() => { setModalVisible(false) }}
             >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <CategoryUpdate 
-                            onAdd={onAddCategoryHandler}
-                            onCancel={cancelModal}
-                        />
-                    </View>
-                </View>
-            </Modal>
+                <TouchableOpacity 
+                    style={styles.centeredView} 
+                    activeOpacity={1} 
+                    onPressOut={() => {setModalVisible(false)}}
+                >
+                    <ScrollView 
+                        directionalLockEnabled={true} 
+                        contentContainerStyle={styles.scrollModal}
+                    >
+                        <TouchableWithoutFeedback>
 
+                            <View style={styles.modalView}>
+                                <CategoryUpdate 
+                                    onAdd={onAddCategoryHandler}
+                                    onCancel={cancelModal}
+                                />
+
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </ScrollView>
+                </TouchableOpacity>
+            </Modal>
+            
             <View style={styles.categoryList}>
                 <FlatList 
                     data={categories} 
                     renderItem={renderItem}
+                    keyExtractor = {item => item.id}
                     numColumns={2}
                 />    
             </View>
+
+            <View style={styles.floatButton}>
+                <TouchableOpacity onPress={() => setModalVisible(modalVisible => !modalVisible)} activeOpacity={.5} >
+                    <Ionicons name='ios-add' size={40} />
+                </TouchableOpacity>        
+            </View>
+            
         </View>
     )        
 };
 
 const styles = StyleSheet.create({
     screen:{
-        margin: 10
+        marginTop: 10,
+        width: '100%',
+        flexDirection: 'column',
+        flex: 1
     },
     inputGroup:{
         flexDirection: 'row',
@@ -100,15 +126,15 @@ const styles = StyleSheet.create({
         width: '95%'
     },
     category: {
-        borderColor: '#d8dde6',
+        borderColor: Colors.accent,
         borderWidth: 4,
         padding: 10,
         width: '48%',
         marginTop: 10,
         marginRight: 10,
         height: 65,
-        backgroundColor: '#d8dde6',
-        shadowColor: '#d8dde6',
+        backgroundColor: Colors.accent,
+        shadowColor: Colors.accent,
         shadowOpacity: 0.26,
         shadowOffset: {width: 0, height: 2},
         shadowRadius: 8,
@@ -118,13 +144,15 @@ const styles = StyleSheet.create({
     categoryText:{
         color:'#0446bf',
         fontSize: 15,
+        fontWeight: 'bold',
         letterSpacing: 3
     },
     categoryList:{
-        marginVertical: 10
+        marginVertical: 10,
+        marginHorizontal: 10
     },
     modalView: {
-        margin: 10,
+        margin: 5,
         backgroundColor: "#fce6ff",
         borderRadius: 20,
         padding: 35,
@@ -137,9 +165,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: 200,
-        width: '90%'
-    },  
+        height: Dimensions.get('window').height/2,
+        width: '95%'
+    }, 
+    scrollModal:{}, 
     openButton: {
         backgroundColor: "#F194FF",
         borderRadius: 20,
@@ -160,7 +189,20 @@ const styles = StyleSheet.create({
     }, 
     button:{
         margin: 5
-    }
+    },
+    floatButton:{
+        alignSelf: 'flex-end',
+        position: 'absolute',
+        bottom: 20,
+        backgroundColor: "#F194FF",
+        right: 20,
+        borderRadius: Math.round(Dimensions.get('window').width + Dimensions.get('window').height) / 2,
+        width: Dimensions.get('window').width * 0.1,
+        height: Dimensions.get('window').width * 0.1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 'bold'
+    }      
 })
 
-export default EditCategoryScreen;
+export default CategoryListScreen;

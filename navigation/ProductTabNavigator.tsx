@@ -6,6 +6,15 @@ import ProductListScreen from '../screens/user/ProductListScreen';
 import CategoryListScreen from '../screens/user/CategoryListScreen';
 import ProductsOverviewScreen from '../screens/shop/ProductsOverviewScreen';
 import { createStackNavigator } from 'react-navigation-stack';
+import { Platform } from 'react-native';
+import Colors from '../constants/Colors';
+
+const defaultNavOptions = {
+  headerStyle:{
+      backgroundColor: Platform.OS === 'android'? Colors.primary: ''
+  },
+  headerTintColor: Platform.OS === 'android'? 'white': Colors.primary
+}
 
 const ProductsNavigator = createStackNavigator({
   Products: ProductListScreen
@@ -14,6 +23,7 @@ const ProductsNavigator = createStackNavigator({
 const CategoriesNavigator = createStackNavigator({
   Categories: CategoryListScreen
 });
+
 
 const ProductTabNavigator =  createBottomTabNavigator({
     Products: ProductsNavigator,

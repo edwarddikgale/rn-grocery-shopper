@@ -18,7 +18,6 @@ const ProductsOverviewScreen = (props:any) =>{
     let user: firebase.User;
     LocalCache.getData('user').then(data => {
         user = data;
-        console.log('user logged in as ' + user.uid);
     });
 
     /*

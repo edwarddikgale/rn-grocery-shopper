@@ -6,9 +6,8 @@ export default interface Product{
     description: string;
     price:number;
     category:string;
+    stockPercentage: number;
+    lastUpdated: Date
 }
 
-export interface IProductCategory{
-    id: string,
-    title: string
-}
+
