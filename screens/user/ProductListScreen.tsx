@@ -27,7 +27,7 @@ const ProductListScreen = (props: any) => {
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [filterText, setFilterText] = useState<string>('');
     const [userId, setUserId] = useState<string>();
-    const products = useSelector((state: IAppState) => state.products.userProducts); //availableProducts
+    const products = useSelector((state: IAppState) => state.products.userProducts);
     const [product, setProduct] = useState<Product>();
     const categories = useSelector((state: IAppState) => state.categories.categories);
 

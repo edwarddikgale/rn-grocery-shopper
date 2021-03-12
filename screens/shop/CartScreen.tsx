@@ -1,16 +1,32 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Text, View, FlatList, Button, StyleSheet, Image} from 'react-native';
+import {Text, View, FlatList, Button, StyleSheet, Image, TouchableHighlight} from 'react-native';
 import {IAppState} from '../../store/state/app.state';
 import {CardItem} from '../../models/cart-item';
-import {clearCart} from '../../store/actions/cart.actions';
+import {clearCart, removeCartItem, incrementCartItem, decrementCartItem, getCart} from '../../store/actions/cart.actions';
 import * as ordersActions from '../../store/actions/orders.actions';
 import Colors from '../../constants/Colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import LocalCache from '../../utils/local.cache';
 
 const CartScreen = (props:any) => {
 
     const dispatch = useDispatch();
+
     const totalAmount = useSelector((state: IAppState) => state.cart.totalAmount);
+    const totalItems = useSelector((state:IAppState) => state.cart.count);
+    const [userId, setUserId] = useState<string>();
+
+    let user: firebase.User;
+    LocalCache.getData('user').then(data => { 
+        user = data;   
+        setUserId(user.uid);
+    });
+
+    useEffect(() => {
+        if(userId && totalItems === 0) dispatch(getCart(userId));
+
+    }, [userId]); 
 
     const cartItems:CardItem[] = useSelector((state: IAppState) => {
         const cartItemArr: CardItem[] = [];
@@ -26,16 +42,50 @@ const CartScreen = (props:any) => {
             });
         }
 
-        return cartItemArr;
+        const sortedCartItems = cartItemArr.sort((a,b) => a.title > b.title? 1: -1);
+        return sortedCartItems;
     });
+
+    const removeItem = (prodId?: string) => {
+        if(prodId)
+            dispatch(removeCartItem(prodId))
+    }
+
+    const incrementItem = (prodId?: string) => {
+        if(prodId)
+            dispatch(incrementCartItem(prodId))
+    }
+
+    const decrementItem = (prodId?: string) => {
+        if(prodId)
+            dispatch(decrementCartItem(prodId))
+    }
 
     const _renderItem = (itemData: any) =>{
         const item: CardItem = itemData.item;
         return (
             <View style={styles.cartItem}>
                 <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemQuantity}>{item.quantity}</Text>
-                <Text style={styles.itemTotal}>${item.total}</Text>
+                <Text style={styles.itemQuantity}>x {item.quantity}</Text>
+                <Text style={styles.itemTotal}>€{item.total}</Text>
+                <View style={styles.cartItemActions}> 
+                    <TouchableHighlight onPress={()=> decrementItem(item.productId)}>
+                        <View>
+                            <Ionicons name='ios-remove-circle' color={'#000000'} size={28} />
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight onPress={()=> incrementItem(item.productId)}>
+                        <View>
+                            <Ionicons name='ios-add-circle' color={'#000000'} size={28} />
+                        </View>
+                    </TouchableHighlight>  
+                    <TouchableHighlight onPress={()=> removeItem(item.productId)}>
+                        <View>
+                            <Ionicons name='ios-trash' color={'red'} size={28} />
+                        </View>
+                    </TouchableHighlight>
+                </View>
+
             </View>
         )
     }
@@ -45,7 +95,7 @@ const CartScreen = (props:any) => {
             <View style={styles.summary}>
                 <Text style={styles.summaryText}>
                     Total: 
-                    <Text>${totalAmount.toFixed(2)} </Text></Text>
+                    <Text>€ {totalAmount? totalAmount.toFixed(2): 0.00} </Text></Text>
 
                 {   cartItems.length > 0 && 
                     <Button title="Clear Cart" color={Colors.accent} onPress={() =>{
@@ -61,8 +111,8 @@ const CartScreen = (props:any) => {
             <View style={styles.cartItemsContainer}>
                 <Text>
                     {
-                        cartItems.length > 0 && 
-                        <Text><Text>{cartItems.length}</Text>) Cart Items</Text>
+                        totalItems > 0 && 
+                        <Text style={styles.cartItemCountSummary}><Text>{totalItems}</Text> Cart Items</Text>
                     }
                     {
                         cartItems.length == 0 && 
@@ -105,6 +155,10 @@ const styles= StyleSheet.create({
     cartItemsContainer:{
 
     },
+    cartItemCountSummary:{
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
+    },
     cartItems:{
 
     },
@@ -114,14 +168,23 @@ const styles= StyleSheet.create({
         alignItems: 'center',
         padding: 1
     },
+    cartItemActions:{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 10,
+        width: '30%'
+    },
     itemTitle:{
-        width: '60%'
+        width: '45%'
     },
     itemQuantity:{
-        width: '5%'
+        width: '10%',
+        paddingHorizontal: 5,
+        color: 'gray'
     },
     itemTotal:{
-        width: '20%'
+        width: '10%',
+        fontWeight: 'bold',
     }
 });
 

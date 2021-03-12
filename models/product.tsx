@@ -7,7 +7,7 @@ export default interface Product{
     price:number;
     category:string;
     stockPercentage: number;
-    lastUpdated: Date
+    lastUpdated: number;
 }
 
 

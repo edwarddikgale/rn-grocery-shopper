@@ -166,9 +166,11 @@ export const updateProduct = (uid: string, payload: Product): any => {
       if(uid){
 
         const path = `stock/${uid}/products/${payload.id}`;
-        console.log('dispatching update product');
+
         payload.id = payload.id || Generator.guid();
-        payload.lastUpdated = new Date();
+
+        let now = new Date(new Date());
+        payload.lastUpdated = now.getTime();
         
         return getFirebase()
             .ref(path)

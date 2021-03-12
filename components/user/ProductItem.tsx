@@ -17,6 +17,7 @@ const ProductItem = (props: any) => {
     const prodHeight = showImage? 300: 80;
 
     const timeAgo = new TimeAgo('en-US');
+    console.log('Product:: ' + JSON.stringify(props.item));
 
     const stockLabel = (stockPerc: any) => {
         let Label = <Text style={styles.stockFinished}> Finished </Text>;

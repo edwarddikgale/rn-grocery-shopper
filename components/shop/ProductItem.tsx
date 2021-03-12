@@ -8,6 +8,7 @@ const ProductItem = (props: any) => {
     }
 
     const showImage = props.showImage? props.showImage: true;
+    const itemPrice = !isNaN(props.item.price)? parseFloat(props.item.price).toFixed(2) : 0.00;
 
     return( 
         <View style={styles.product}>
@@ -15,12 +16,12 @@ const ProductItem = (props: any) => {
             <TouchableComponent useForground onPress={props.onViewDetails}>
                 <View>
                     {
-                        showImage && 
+                        showImage &&                      
                         <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
                     }
                     <View style={styles.details}>
                         <Text style={styles.title}>{props.item.title}</Text>
-                        <Text style={styles.price}>$ {props.item.price.toFixed(2)}</Text>
+                        <Text style={styles.price}>€ {itemPrice }</Text>
                     </View>
                     <View style={styles.actions}>
                         <Button title='View Details' onPress={props.onViewDetails} />

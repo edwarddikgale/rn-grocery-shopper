@@ -1,37 +1,46 @@
-import React,{useCallback} from 'react';
+import React,{useCallback, useEffect, useState} from 'react';
 import {Text, View, ScrollView, Button, StyleSheet, Image} from 'react-native';
 import Product from '../../models/product';
 import {useSelector, useDispatch} from 'react-redux';
 import { HeaderTitle } from 'react-navigation-stack';
 import * as cartActions from '../../store/actions/cart.actions';
+import LocalCache from '../../utils/local.cache';
 
 const ProductDetailScreen = (props: any) =>{
     const {navigation} = props;
-    const productId = navigation.getParam('productId');
-    const product = useSelector((state: any) => 
-        state.products.availableProducts.find((p:any) => p.id === productId)) as Product;
-    
+    const product = JSON.parse(navigation.getParam('product')) as Product;
+    const [userId, setUserId] = useState<string>('');
+
     const dispatch = useDispatch();
 
-    useCallback(() =>
+    /*useEffect(() =>
         props.navigation.setParams({
             productTitle: product.title
         })
-   ,[navigation]);    
+   ,[]);*/
+   
+    LocalCache.getData('user').then(data => {  
+        const user = data;   
+        setUserId(user.uid);
+    });
 
     return (
         <ScrollView>
             <View>
+                {
+                product.imageUrl &&    
                 <Image 
                     style={styles.image} 
                     source={{uri: product.imageUrl}} />
+                }
                 <View style={styles.actions}>
                     <Button 
                         title='Add to cart' 
-                        onPress={() => dispatch(cartActions.addToCart(product))} />
+                        onPress={() => dispatch(cartActions.addToCart(userId, product))} />
                 </View>
-                <Text style={styles.price}>${product.price}</Text>
+                <Text style={styles.price}>€ {product.price}</Text>
                 <Text style={styles.description}>{product.description}</Text>
+                
             </View>
         </ScrollView>
     )
@@ -61,6 +70,7 @@ const styles = StyleSheet.create({
 });
 
 ProductDetailScreen.navigationOptions = (navData: any) => {
+    
     return {
         headerTitle: navData.navigation.getParam('productTitle')
     }

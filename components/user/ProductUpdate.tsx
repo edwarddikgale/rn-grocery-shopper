@@ -5,6 +5,9 @@ import CustomTextInput from '../ui/custom-text-input';
 import CategoryCarousel from '../../screens/common/CategoryCarousel';
 import Slider from '@react-native-community/slider';
 import Colors from '../../constants/Colors';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Ionicons';
+import ProductCategory from '../../models/productCategory';
 
 interface IProps{
    // onAdd: PropTypes.
@@ -13,8 +16,16 @@ interface IProps{
 const ProductUpdate = (props: any) => {
 
     const [product, setProduct] = useState<Product>(props.product? props.product : {} as Product);
-    const categories = props.categories;
+    const categories: ProductCategory[] = props.categories;
+    const categoryItems = categories.map((cat:ProductCategory) => { 
+        return {
+            label: cat.title, 
+            value: cat.title,
+            icon: () => <Icon name="md-link" size={18} color="#900" />
+        }
+    });
 
+    const defaultCategory = categoryItems[0];
 
     const handleTitleChange = (text: string) => { setProduct({...product,title: text}); }
 
@@ -24,6 +35,7 @@ const ProductUpdate = (props: any) => {
 
     const handleImageChange  = (url: string) => { setProduct({...product, imageUrl: url}); }
 
+    const handleDescriptionChange  = (text: string) => { setProduct({...product, description: text}); }
 
     const handleCategoryChange = (category: any) => {
         setProduct({...product, category: category.title});
@@ -36,11 +48,26 @@ const ProductUpdate = (props: any) => {
                 categories={categories}
                 onSelected={handleCategoryChange}
                 selectedValue={product.category}
+                isVisible={false}
             />
             
             <View style={styles.inputsContainer}>
-                <Text style={styles.textLabel}>Name/Title:</Text> 
+                <View style={styles.category}>
+                    <Text style={styles.textLabel}>Type: </Text>
+                    <DropDownPicker
+                        items={categoryItems}
+                        defaultValue={product.category}
+                        containerStyle={{height: 40}}
+                        style={{backgroundColor: '#fafafa'}}
+                        itemStyle={{
+                            justifyContent: 'flex-start'
+                        }}
+                        dropDownStyle={{backgroundColor: '#fafafa'}}
+                        onChangeItem={item => handleCategoryChange(item.value)}
+                    />
+                </View>
                 <View>
+                    <Text style={styles.textLabel}>Name/Title:</Text> 
                     <CustomTextInput 
                         placeholder='Product Name'
                         onChangeText={handleTitleChange}
@@ -67,9 +94,15 @@ const ProductUpdate = (props: any) => {
                         maxLength={1024}
                     />     
                 </View>
-                <View style={styles.category}>
-                    <Text style={styles.textLabel}>Type: </Text>
-                    <Text style={styles.categoryText}>#{product.category}</Text>
+                <View>
+                    <Text style={styles.textLabel}>Description:</Text> 
+                    <CustomTextInput 
+                        onChangeText={handleDescriptionChange}
+                        placeholder='Describe the product...'
+                        value={product.description}
+                        style={{...styles.textInput, ...styles.fullInput}}
+                        maxLength={1024}
+                    />     
                 </View>
                 <View style={styles.value}>
                     <Text style={styles.textLabel}>Remaining:</Text>
@@ -126,7 +159,7 @@ const styles = StyleSheet.create({
     },
     inputsContainer:{
         marginRight: 10,
-        width: '85%'
+        width: '99%'
     },
     textInput:{
         borderBottomWidth: 2,
@@ -183,7 +216,8 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
     },
     textLabel:{
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
     }
 });
 

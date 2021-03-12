@@ -12,6 +12,7 @@ const CategoryCarousel = (props: any) => {
     const CAROUSEL_ITEM_WIDTH = SCREEN_WIDTH/4;
     const CONTENT_OFFSET = 0;
 
+    const isVisible = props.isVisible || false;
     const categories: ProductCategory[] = props.categories;
     const selectedIndex = props.selectedValue? categories.findIndex(cat => cat === props.selectedValue): 1; 
     const [activeSlide, setActiveSlide] = useState(selectedIndex >= 0? selectedIndex : 1);
@@ -37,22 +38,28 @@ const CategoryCarousel = (props: any) => {
       );
     
       return (
-          <SafeAreaView>
-            <View style={styles.snapCarousel}>
-                <View style={styles.carouselWrapper}>
-                  <SideSwipe
-                    index={activeSlide}
-                    itemWidth={CAROUSEL_ITEM_WIDTH}
-                    style={{ width: SCREEN_WIDTH }}
-                    data={categories}
-                    contentOffset={CONTENT_OFFSET}
-                    onIndexChange={index => updateSelected(index)}
-                    renderItem={({ itemIndex, currentIndex, item,  animatedValue }) => renderSlideItem({itemIndex, currentIndex, item,  animatedValue})}
-                    useNativeDriver={false}
-                  />
-                </View>
-            </View>
-          </SafeAreaView>  
+          <View>
+            {
+            isVisible && 
+            <SafeAreaView>
+              <View style={styles.snapCarousel}>
+                  <View style={styles.carouselWrapper}>
+                    <SideSwipe
+                      index={activeSlide}
+                      itemWidth={CAROUSEL_ITEM_WIDTH}
+                      style={{ width: SCREEN_WIDTH }}
+                      data={categories}
+                      contentOffset={CONTENT_OFFSET}
+                      onIndexChange={index => updateSelected(index)}
+                      renderItem={({ itemIndex, currentIndex, item,  animatedValue }) => renderSlideItem({itemIndex, currentIndex, item,  animatedValue})}
+                      useNativeDriver={false}
+                    />
+                  </View>
+              </View>
+            </SafeAreaView>
+            }
+          </View>
+         
       );
 }    
 
