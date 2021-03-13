@@ -8,6 +8,7 @@ export default interface Product{
     category:string;
     stockPercentage: number;
     lastUpdated: number;
+    lastOrderQuantity: number
 }
 
 

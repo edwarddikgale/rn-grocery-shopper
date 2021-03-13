@@ -37,8 +37,8 @@ const ProductUpdate = (props: any) => {
 
     const handleDescriptionChange  = (text: string) => { setProduct({...product, description: text}); }
 
-    const handleCategoryChange = (category: any) => {
-        setProduct({...product, category: category.title});
+    const handleCategoryChange = (category: string) => {
+        setProduct({...product, category: category});
     }
 
     return (

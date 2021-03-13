@@ -5,13 +5,13 @@ import * as orderActions from '../actions/orders.actions';
 export default(state: IOrderState = initialState, action: any) => {
     switch(action.type){
     
-        case orderActions.ADD_ORDER: 
-            console.log('adding order');
-            
+        case orderActions.ADD_ORDER_SUCCESS: 
+            console.log('order payload ' + JSON.stringify(action.payload));
+
             const newOrder = {
                 id: new Date().toString(),
-                items: action.data.items,
-                totalAmount: action.data.amount,
+                items: action.payload.cartItems,
+                totalAmount: action.payload.totalAmount,
                 date: new Date()
             } as Order;
             

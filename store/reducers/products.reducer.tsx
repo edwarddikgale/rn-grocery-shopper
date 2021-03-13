@@ -20,11 +20,13 @@ const productsReducer =  (state: IProductState = initialState, action: any) => {
             return {...state, userProducts: products};
 
         case actionTypes.UPDATE_PRODUCT_SUCCESS: 
-            const updatedProduct:Product = {...action.payload};
-            const unalteredList = state.userProducts.filter(prod => prod.id !== updatedProduct.id);
+            const updatedProd:Product = {...action.payload};
+            const prodToUpdated:Product = {...state.userProducts.find(prod => prod.id === updatedProd.id) as unknown as Product, ...updatedProd};
+
+            const unalteredList = state.userProducts.filter(prod => prod.id !== prodToUpdated.id);
             return {
                 ...state, 
-                userProducts:[...unalteredList, updatedProduct]};    
+                userProducts:[...unalteredList, prodToUpdated]};    
             
     }   
 

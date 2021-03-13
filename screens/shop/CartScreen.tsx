@@ -47,8 +47,8 @@ const CartScreen = (props:any) => {
     });
 
     const removeItem = (prodId?: string) => {
-        if(prodId)
-            dispatch(removeCartItem(prodId))
+        if(userId && prodId)
+            dispatch(removeCartItem(userId, prodId))
     }
 
     const incrementItem = (prodId?: string) => {
@@ -59,6 +59,22 @@ const CartScreen = (props:any) => {
     const decrementItem = (prodId?: string) => {
         if(prodId)
             dispatch(decrementCartItem(prodId))
+    }
+
+    const orderNow = () => {
+        if(userId){
+            dispatch(ordersActions.addOrder(userId, {cartItems, totalAmount}));
+            dispatch(clearCart(userId));
+            //clear cart
+            //update the products
+        }
+            
+    }
+
+    const clearThisCart = () => {
+        if(userId){
+            dispatch(clearCart(userId));
+        }
     }
 
     const _renderItem = (itemData: any) =>{
@@ -98,14 +114,10 @@ const CartScreen = (props:any) => {
                     <Text>€ {totalAmount? totalAmount.toFixed(2): 0.00} </Text></Text>
 
                 {   cartItems.length > 0 && 
-                    <Button title="Clear Cart" color={Colors.accent} onPress={() =>{
-                        dispatch(clearCart());
-                    }} />
+                    <Button title="Clear Cart" color={Colors.accent} onPress={() =>{ clearThisCart()}} />
                 }   
                 {   cartItems.length > 0 &&  
-                    <Button title="Order Now" color={Colors.primary} onPress={() => {
-                        dispatch(ordersActions.addOrder(cartItems, totalAmount));
-                    }} />
+                    <Button title="Order Now" color={Colors.primary} onPress={() => { orderNow()}} />
                 }
             </View>
             <View style={styles.cartItemsContainer}>

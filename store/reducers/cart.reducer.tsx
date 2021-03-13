@@ -6,6 +6,10 @@ import initialState, {ICartState} from '../state/cart.state';
 
 export default (state: ICartState = initialState, action: any) => {
 
+    let products: Product[] = [];
+    let productSum = 0;
+    let cartItems = {};
+
     const addOrUpdateCartItem = (items:{[key: string]: CardItem}, product: Product): {items:any} => {
 
         if(items[product.id]){
@@ -40,43 +44,23 @@ export default (state: ICartState = initialState, action: any) => {
     switch(action.type){
 
         case actionTypes.ADD_TO_CART_SUCCESS:  
-            const addedProduct:Product = {...action.payload};
+            products = [action.payload];
+            productSum = 0;
+            cartItems = {...state.items};
+        
+            products.forEach(product => {
+                productSum += product.price;
+                cartItems = addOrUpdateCartItem(cartItems, product).items;
+            });
 
-            if(state.items[addedProduct.id]){
-                const currentCartItem = {...state.items[addedProduct.id]};
-                const updatedCartItem = {
-                    ...currentCartItem, 
-                    quantity: currentCartItem.quantity + 1,
-                    total: currentCartItem.total + addedProduct.price
-                };
+            return {
+                ...state,
+                items: {...cartItems},
+                totalAmount: state.totalAmount + productSum,
+                count: state.count + products.length
+            };   
 
-                return {
-                    ...state,
-                    items:{
-                        ...state.items,
-                        [addedProduct.id]: updatedCartItem       
-                    },
-                    totalAmount: state.totalAmount + addedProduct.price,
-                    count: state.count + 1
-                }
-            }
-            else{
-                const newCartItem:CardItem = {
-                    title: addedProduct.title,
-                    price: addedProduct.price,
-                    quantity: 1,
-                    total: addedProduct.price 
-                };
-                
-                return {
-                    ...state,
-                    items:{...state.items, [addedProduct.id]: newCartItem},
-                    totalAmount: state.totalAmount + addedProduct.price,
-                    count: state.count + 1
-                }
-            }   
-
-        case actionTypes.REMOVE_CART_ITEM:
+        case actionTypes.REMOVE_CART_ITEM_SUCCESS:
             if(state.items[action.payload]){
                 const removedItem = {...state.items[action.payload]};
                 delete state.items[action.payload];
@@ -87,7 +71,7 @@ export default (state: ICartState = initialState, action: any) => {
                         ...state.items      
                     },
                     totalAmount: state.totalAmount - removedItem.price,
-                    count: state.count + 1
+                    count: state.count - 1
                 }                
             }  
 
@@ -138,23 +122,23 @@ export default (state: ICartState = initialState, action: any) => {
             } 
                 
         case actionTypes.GET_CART_SUCCESS:
-            const products: Product[] = action.payload;
-            let productSum = 0;
-            let items = {...state.items};
+            products = action.payload;
+            productSum = 0;
+            cartItems = {...state.items};
           
             products.forEach(product => {
                 productSum += product.price;
-                items = addOrUpdateCartItem(items, product).items;
+                cartItems = addOrUpdateCartItem(cartItems, product).items;
             });
 
             return {
                 ...state,
-                items: {...items},
+                items: {...cartItems},
                 totalAmount: state.totalAmount + productSum,
                 count: products.length
             };
 
-        case actionTypes.CLEAR_CART:
+        case actionTypes.CLEAR_CART_SUCCESS:
             return initialState
     }
     return state;
