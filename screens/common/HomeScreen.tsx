@@ -7,6 +7,8 @@ const HomeScreen = (props: any) => {
   const [user, setUser] = useState({} as any);
   const [mobile, setMobile] = useState<string>('');
 
+  //props.navigation.navigate('App');
+
   useEffect(() => {
     firebase.auth().onAuthStateChanged(async (user) => {
       if (user != null) {
@@ -18,38 +20,9 @@ const HomeScreen = (props: any) => {
   });
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.container}>
-          <Text>{user.email}</Text>
-          <Button title="Log Off" onPress={() => {
-            firebase.auth().signOut();
-          }}/>
-
-          <View>
-            <TextInput
-                      style={styles.input}
-                      placeholder="Mobile...."
-                      placeholderTextColor="#B1B1B1"
-                      value={mobile}
-                      onChangeText={mobile => setMobile(mobile)}
-                  />
-              <Button title='SAVE' onPress={() => {
-                const mobilePath = 'User/' + user.uid + '/details';
-                return firebase.database().ref(mobilePath).set({
-                  mobile: mobile  
-                });
-              }} />    
-
-              <View style={{margin: 20}}>
-                <Button  title='CONTINUE TO APP...' onPress={() =>{
-                  props.navigation.navigate('App');
-                }} />
-              </View>
-
-            </View>
-
-        </View>
-      </SafeAreaView>
+      <View>
+        <Text>Welcome back, {user? user.email: ''}</Text>
+      </View>
     );
 }
 const styles = StyleSheet.create({
@@ -57,13 +30,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  input: {
-    fontSize: 18,
-    borderColor: "#707070",
-    borderBottomWidth: 1,
-    paddingBottom: 1.5,
-    marginTop: 25.5
-  },  
+  }  
 });
 export default HomeScreen;

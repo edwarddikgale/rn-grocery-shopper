@@ -29,7 +29,7 @@ export const addOrderFail = (payload: string) => {
 }
 
 
-export const addOrder = (uid: string, payload: {cartItems: CardItem[], totalAmount: number, lastUpdated: number}): any => {
+export const addOrder = (uid: string, payload: {cartItems: CardItem[], totalAmount: number, lastUpdated?: number}): any => {
 
     return (dispatch: any, getState: any, getFirebase: any) => {
 
