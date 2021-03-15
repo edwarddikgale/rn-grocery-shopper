@@ -93,14 +93,14 @@ const SignInScreen = (props: any) => {
 
     return (
         <TouchableWithoutFeedback
-        onPress={() => {
-            Keyboard.dismiss();
-        }}
+            onPress={() => {
+                Keyboard.dismiss();
+            }}
         >
         <SafeAreaView style={{ flex: 1 }}>
             <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <Text style={{ fontSize: 24, marginTop: 20, fontWeight: "700", color: "gray" }}>
-                Restock.home
+            <Text style={{ fontSize: 24, marginTop: 20, fontWeight: "700", color: "gray", letterSpacing: 10 }}>
+                Re-stock 
             </Text>
             <View style={styles.form}>
                 <TextInput
@@ -139,7 +139,13 @@ const SignInScreen = (props: any) => {
                 style={{ width: '86%', marginTop: 10 }}
                 onPress={() => signInWithEmail()}>
                     <View style={styles.standardButton}>
-                        <Text>Sign In</Text>
+                        <Text
+                            style={{
+                                letterSpacing: 0.5,
+                                fontSize: 16,
+                                fontWeight:'bold'
+                                }}
+                        >Sign In</Text>
                     </View>                
             </TouchableOpacity>
             <TouchableOpacity 
@@ -236,4 +242,13 @@ const styles = StyleSheet.create({
     borderColor: "#707070"
   }
 });
+
+SignInScreen.navigationOptions = (navData: any) => {
+
+    return ({
+        headerTitle: `Sign In`,                   
+    })
+        
+};  
+
 export default SignInScreen;

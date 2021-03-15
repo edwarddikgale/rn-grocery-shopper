@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Text, View, FlatList, Button, StyleSheet, Image, TouchableHighlight} from 'react-native';
+import {Text, View, FlatList, Button, StyleSheet, Image, TouchableHighlight, Dimensions, TouchableWithoutFeedback} from 'react-native';
 import {IAppState} from '../../store/state/app.state';
 import {CardItem} from '../../models/cart-item';
 import {clearCart, removeCartItem, incrementCartItem, decrementCartItem, getCart} from '../../store/actions/cart.actions';
@@ -81,25 +81,28 @@ const CartScreen = (props:any) => {
         const item: CardItem = itemData.item;
         return (
             <View style={styles.cartItem}>
-                <Text style={styles.itemTitle}>{item.title}</Text>
-                <Text style={styles.itemQuantity}>x {item.quantity}</Text>
-                <Text style={styles.itemTotal}>€{item.total}</Text>
+                <View style={styles.cartItemContent}>
+                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={styles.itemQuantity}>x {item.quantity}</Text>
+                    <Text style={styles.itemTotal}>€{item.total}</Text>
+                </View>
                 <View style={styles.cartItemActions}> 
-                    <TouchableHighlight onPress={()=> decrementItem(item.productId)}>
-                        <View>
-                            <Ionicons name='ios-remove-circle' color={'#000000'} size={28} />
+                
+                    <TouchableWithoutFeedback onPress={()=> decrementItem(item.productId)}>
+                        <View style={styles.cartItemAction}>
+                            <Ionicons name='ios-remove-circle' color={'gray'} size={28} />
                         </View>
-                    </TouchableHighlight>
-                    <TouchableHighlight onPress={()=> incrementItem(item.productId)}>
-                        <View>
-                            <Ionicons name='ios-add-circle' color={'#000000'} size={28} />
+                    </TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={()=> incrementItem(item.productId)}>
+                        <View style={styles.cartItemAction}>
+                            <Ionicons name='ios-add-circle' color={'gray'} size={28} />
                         </View>
-                    </TouchableHighlight>  
-                    <TouchableHighlight onPress={()=> removeItem(item.productId)}>
-                        <View>
+                    </TouchableWithoutFeedback>  
+                    <TouchableWithoutFeedback onPress={()=> removeItem(item.productId)}>
+                        <View style={styles.cartItemAction}>
                             <Ionicons name='ios-trash' color={'red'} size={28} />
                         </View>
-                    </TouchableHighlight>
+                    </TouchableWithoutFeedback>
                 </View>
 
             </View>
@@ -121,7 +124,7 @@ const CartScreen = (props:any) => {
                 }
             </View>
             <View style={styles.cartItemsContainer}>
-                <Text>
+                <Text style={styles.cartItemCountSummary}>
                     {
                         totalItems > 0 && 
                         <Text style={styles.cartItemCountSummary}><Text>{totalItems}</Text> Cart Items</Text>
@@ -169,25 +172,36 @@ const styles= StyleSheet.create({
     },
     cartItemCountSummary:{
         fontWeight: 'bold',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
+        marginBottom: 10
     },
     cartItems:{
 
     },
     cartItem:{
+        alignItems: 'center',
+        marginBottom: 10,
+        padding: 10,
+        borderColor: Colors.lightGray,
+        borderWidth: 1,
+        borderRadius: 10,
+        backgroundColor: 'white', 
+    },
+    cartItemContent:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 1
     },
     cartItemActions:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 10,
-        width: '30%'
+        padding: 15,
+        marginLeft: Dimensions.get('window').width/4 + 20
+    },
+    cartItemAction:{
+        width: Dimensions.get('window').width/4
     },
     itemTitle:{
-        width: '45%'
+        width: '70%'
     },
     itemQuantity:{
         width: '10%',
@@ -195,7 +209,7 @@ const styles= StyleSheet.create({
         color: 'gray'
     },
     itemTotal:{
-        width: '10%',
+        width: '20%',
         fontWeight: 'bold',
     }
 });

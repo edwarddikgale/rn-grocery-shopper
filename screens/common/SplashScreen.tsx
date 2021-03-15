@@ -12,14 +12,9 @@ const SplashScreen = (props: any) => {
 
     useEffect(() => {
       firebase.auth().onAuthStateChanged(user => {
-          if (user) {
-              setNextScreen('App')
-          } else {
-            setNextScreen('SignUp')
-          }
-
+          setNextScreen(user? 'App': 'SignUp')
       });
-  });
+    });
 
     if(animation){
         animation.play(30,120);

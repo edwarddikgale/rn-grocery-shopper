@@ -16,7 +16,7 @@ import CustomTextInput from '../../components/ui/custom-text-input';
 import HiddenItemWithActions from '../common/HiddenItemWithActions';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/ui/header-button';
-import { DrawerActions } from 'react-navigation';
+import {DrawerActions} from 'react-navigation-drawer';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -233,7 +233,7 @@ ProductListScreen.navigationOptions = (navData: any) => {
 
     //const title = `Products (${cartItemCount} in Cart)`;
     return ({
-        headerTitle: `Manage ${productCount} Products `,
+        headerTitle: `Manage ${productCount || ''} Products `,
         headerStyle:{
             backgroundColor: Platform.OS === 'android'? Colors.primary: ''
         },
