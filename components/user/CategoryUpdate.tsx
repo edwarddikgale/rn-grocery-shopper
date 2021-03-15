@@ -1,6 +1,6 @@
 import React, { ReactPropTypes, useState } from 'react';
-import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
-import { IProductCategory } from '../../models/product';
+import {View, Text, StyleSheet, TextInput, Button, Dimensions} from 'react-native';
+import ProductCategory from '../../models/productCategory';
 
 interface IProps{
    // onAdd: PropTypes.
@@ -8,18 +8,19 @@ interface IProps{
 
 const CategoryUpdate = (props: any) => {
 
-    const [category, setCategory] = useState<IProductCategory>({} as IProductCategory);
+    const [category, setCategory] = useState<ProductCategory>(props.category || {} as ProductCategory);
     const handleTextChange = (text: string) => {
         setCategory({title: text, id: ''});
     }
 
     return (
-        <View>
+        <View style={styles.container}>
             <View>
                 <TextInput 
                     onChangeText={handleTextChange}
                     value={category.title}
                     style={{...styles.textInput, ...styles.fullInput}}
+                    placeholder={'Category Name...'}
                 />     
             </View>
             <View style={styles.inputGroup}>
@@ -42,6 +43,10 @@ const CategoryUpdate = (props: any) => {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        width: '100%'
+    },
     textInput:{
         borderBottomWidth: 2,
         borderBottomColor: '#000',
@@ -56,7 +61,8 @@ const styles = StyleSheet.create({
         padding: 5
     },
     button:{
-        margin: 5
+        margin: 5,
+        width: Dimensions.get('window').width/3
     }
 });
 

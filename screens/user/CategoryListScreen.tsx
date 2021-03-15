@@ -15,6 +15,7 @@ const CategoryListScreen = (props: any) => {
     const categories = useSelector((state: IAppState) => state.categories.categories);
     const [userId, setUserId] = useState<string>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [category, setCategory] = useState<ProductCategory>({} as ProductCategory);
     
     let cachedUser = {} as firebase.User;
     const dispatch = useDispatch();
@@ -32,7 +33,7 @@ const CategoryListScreen = (props: any) => {
     }, [userId]);  
     
 
-    const onAddCategoryHandler = (category: ProductCategory) => { 
+    const onSaveCategoryHandler = (category: ProductCategory) => { 
 
         const matches = categories.filter(cat => cat.title === category.title);
         if(!category || !category.title || category.title.length == 0) return;
@@ -45,19 +46,26 @@ const CategoryListScreen = (props: any) => {
 
     const cancelModal = () => { setModalVisible(false);}
 
+    const onViewDetails = (category: ProductCategory) => {
+        setCategory(category);
+        setModalVisible(true);
+    }
+
     const renderItem = (itemData: {item: ProductCategory}) => {
         
         return (
-            <View style={styles.category}>
-                <Text style={styles.categoryText}>{itemData.item.title}</Text>
-            </View>
+            <TouchableWithoutFeedback onPress={() => onViewDetails(itemData.item)}>
+                <View style={styles.category}>
+                    <Text style={styles.categoryText}>{itemData.item.title}</Text>
+                </View>
+            </TouchableWithoutFeedback>
         )
     }
 
     return (
         <View style={styles.screen}>
 
-<Modal
+            <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
@@ -76,7 +84,8 @@ const CategoryListScreen = (props: any) => {
 
                             <View style={styles.modalView}>
                                 <CategoryUpdate 
-                                    onAdd={onAddCategoryHandler}
+                                    category={category}
+                                    onAdd={onSaveCategoryHandler}
                                     onCancel={cancelModal}
                                 />
 
@@ -165,8 +174,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        height: Dimensions.get('window').height/2,
-        width: '95%'
+        height: Dimensions.get('window').height/3,
+        width: Dimensions.get('window').width - 20
     }, 
     scrollModal:{}, 
     openButton: {

@@ -50,6 +50,7 @@ OrdersScreen.navigationOptions = (navData: any) => {
                         }}
 
                     />
+                    
                 </HeaderButtons> 
         }     
     )
