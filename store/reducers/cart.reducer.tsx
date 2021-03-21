@@ -32,7 +32,8 @@ export default (state: ICartState = initialState, action: any) => {
                 title: product.title,
                 price: product.price,
                 quantity: 1,
-                total: product.price 
+                total: product.price,
+                productId: product.id 
             };
             
             return {

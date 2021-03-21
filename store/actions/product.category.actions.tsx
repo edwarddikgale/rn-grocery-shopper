@@ -7,10 +7,21 @@ export const ADD_PRODUCT_CATEGORY = 'ADD_PRODUCT_CATEGORY';
 export const ADD_PRODUCT_CATEGORY_START = 'ADD_PRODUCT_CATEGORY_START';
 export const ADD_PRODUCT_CATEGORY_FAIL = 'ADD_PRODUCT_CATEGORY_FAIL';
 export const ADD_PRODUCT_CATEGORY_SUCCESS = 'ADD_PRODUCT_CATEGORY_SUCCESS';
+
+export const DELETE_PRODUCT_CATEGORY = 'DELETE_PRODUCT_CATEGORY';
+export const DELETE_PRODUCT_CATEGORY_START = 'DELETE_PRODUCT_CATEGORY_START';
+export const DELETE_PRODUCT_CATEGORY_FAIL = 'DELETE_PRODUCT_CATEGORY_FAIL';
+export const DELETE_PRODUCT_CATEGORY_SUCCESS = 'DELETE_PRODUCT_CATEGORY_SUCCESS';
+
 export const GET_PRODUCT_CATEGORYS = 'GET_PRODUCT_CATEGORYS';
 export const GET_PRODUCT_CATEGORYS_START = 'GET_PRODUCT_CATEGORYS_START';
 export const GET_PRODUCT_CATEGORYS_FAIL = 'GET_PRODUCT_CATEGORYS_FAIL';
 export const GET_PRODUCT_CATEGORYS_SUCCESS = 'GET_PRODUCT_CATEGORYS_SUCCESS';
+
+export const UPDATE_PRODUCT_CATEGORY = 'UPDATE_PRODUCT_CATEGORY';
+export const UPDATE_PRODUCT_CATEGORY_START = 'UPDATE_PRODUCT_CATEGORY_START';
+export const UPDATE_PRODUCT_CATEGORY_FAIL = 'UPDATE_PRODUCT_CATEGORY_FAIL';
+export const UPDATE_PRODUCT_CATEGORY_SUCCESS = 'UPDATE_PRODUCT_CATEGORY_SUCCESS';
 
 export const UserNotAuthError = 'User not authorised';
 
@@ -21,14 +32,14 @@ export const addProductCategoryStart = (): {type: string, payload: boolean} => {
     }
 }
 
-export const addProductCategorySuccess = (payload: ProductCategory[]): {type: string, payload: ProductCategory[]} => {
+export const addProductCategorySuccess = (payload: ProductCategory): {type: string, payload: ProductCategory} => {
     return {
         type: ADD_PRODUCT_CATEGORY_SUCCESS, 
         payload: payload
     }
 }
 
-export const addProductCategoryFailure = (payload: string): {type: string, payload: string} => {
+export const addProductCategoryFail = (payload: string): {type: string, payload: string} => {
     return {
         type: ADD_PRODUCT_CATEGORY_FAIL, 
         payload: payload
@@ -56,6 +67,48 @@ export const getProductCategoriesSuccess = (payload: ProductCategory[]): {type: 
     }
 }
 
+export const updateProductCategoryStart = (): {type: string, payload: boolean} => {
+    return {
+        type: UPDATE_PRODUCT_CATEGORY_START, 
+        payload: true
+    }
+}
+
+export const updateProductCategorySuccess = (payload: ProductCategory): {type: string, payload: ProductCategory} => {
+    return {
+        type: UPDATE_PRODUCT_CATEGORY_SUCCESS, 
+        payload: payload
+    }
+}
+
+export const updateProductCategoryFail = (payload: string): {type: string, payload: string} => {
+    return {
+        type: UPDATE_PRODUCT_CATEGORY_FAIL, 
+        payload: payload
+    }
+}
+
+export const deleteProductCategoryStart = (): {type: string, payload: boolean} => {
+    return {
+        type: UPDATE_PRODUCT_CATEGORY_START, 
+        payload: true
+    }
+}
+
+export const deleteProductCategorySuccess = (payload: string): {type: string, payload: string} => {
+    return {
+        type: DELETE_PRODUCT_CATEGORY_SUCCESS, 
+        payload: payload
+    }
+}
+
+export const deleteProductCategoryFail = (payload: string): {type: string, payload: string} => {
+    return {
+        type: UPDATE_PRODUCT_CATEGORY_FAIL, 
+        payload: payload
+    }
+}
+
 
 export const addProductCategory = (uid: string, payload: ProductCategory): any => {
 
@@ -66,17 +119,63 @@ export const addProductCategory = (uid: string, payload: ProductCategory): any =
 
         const userPath = `stock/${uid}/productCategories`;
         payload.id = payload.id || Generator.guid();
-        console.log('Adding category : ' + JSON.stringify(payload));
 
         return getFirebase()
             .ref(userPath)
             .push(payload)
             .then(() => {
-                console.log('Successfully added category')
-                dispatch(addProductCategorySuccess(payload as unknown as ProductCategory[]))
+                dispatch(addProductCategorySuccess(payload as unknown as ProductCategory))
             })
             .catch((err:any) => {
-                dispatch(addProductCategoryFailure(err))  
+                dispatch(addProductCategoryFail(err))  
+            })
+        }
+       else
+            dispatch(getProductCategoriesFail(UserNotAuthError));    
+    }
+}
+
+export const updateProductCategory = (uid: string, payload: ProductCategory): any => {
+
+    return (dispatch: any, getState: any, getFirebase: any) => {
+        
+      dispatch(updateProductCategoryStart());
+      if(uid){
+
+        const userPath = `stock/${uid}/productCategories`;
+
+        return getFirebase()
+            .ref(userPath)
+            .update(payload)
+            .then(() => {
+                dispatch(updateProductCategorySuccess(payload as unknown as ProductCategory))
+            })
+            .catch((err:any) => {
+                dispatch(updateProductCategoryFail(err))  
+            })
+        }
+       else
+            dispatch(getProductCategoriesFail(UserNotAuthError));    
+    }
+}
+
+export const deleteProductCategory = (uid: string, payload: string): any => {
+
+    return (dispatch: any, getState: any, getFirebase: any) => {
+        
+      dispatch(deleteProductCategoryStart());
+      if(uid){
+
+        const userPath = `stock/${uid}/productCategories/${payload}`;
+
+        return getFirebase()
+            .ref(userPath)
+            .remove()
+            .then(() => {
+                dispatch(deleteProductCategorySuccess(payload))
+            })
+            .catch((err:any) => {
+                dispatch(deleteProductCategoryFail(err))  
             })
         }
        else
@@ -87,7 +186,7 @@ export const addProductCategory = (uid: string, payload: ProductCategory): any =
 export const getProductCategories = (uid:string, payload: any): any => {
 
     return (dispatch:any, getState: any, getFirebase: any) => {
-        console.log('action: get categories starting...');
+ 
         dispatch(getProductCategoriesStart());
         if(uid){
             const userPath = `stock/${uid}/productCategories`;    
@@ -97,11 +196,10 @@ export const getProductCategories = (uid:string, payload: any): any => {
                     let categories: ProductCategory[] = [];
                     snap.forEach(data => {
                         let category = data.val();
-                        category.id = category.id || Generator.guid();
+                        category.id = data.key || category.id;
                         categories.push(category)
                     });
 
-                    console.log('action: get categories completed...');
                     dispatch(getProductCategoriesSuccess(categories));
                     
 

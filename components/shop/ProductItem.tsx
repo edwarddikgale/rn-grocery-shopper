@@ -1,5 +1,7 @@
 import React from 'react';
 import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
+import Colors from '../../constants/Colors';
+import { CardItem } from '../../models/cart-item';
 
 const ProductItem = (props: any) => {
     let TouchableComponent: any = TouchableOpacity;
@@ -9,6 +11,7 @@ const ProductItem = (props: any) => {
 
     const showImage = props.showImage? props.showImage: true;
     const itemPrice = !isNaN(props.item.price)? parseFloat(props.item.price).toFixed(2) : 0.00;
+    const cartItem = props.cartItem as CardItem; 
 
     return( 
         <View style={styles.product}>
@@ -25,8 +28,14 @@ const ProductItem = (props: any) => {
                     </View>
                     <View style={styles.actions}>
                         <Button title='View Details' onPress={props.onViewDetails} />
-                        <Button title='To Cart' onPress={props.onAddToCart} />
+                        <Button title={cartItem? cartItem.quantity + ' In Cart +': 'To Cart'} color={cartItem? Colors.green: Colors.buttonSubmit } onPress={props.onAddToCart} />
                     </View>
+                    {
+                    cartItem &&    
+                    <View style={{backgroundColor: Colors.green, height: 3, marginTop: 5}}>
+
+                    </View>
+                    }
                 </View>
             </TouchableComponent>
             </View>
@@ -53,7 +62,7 @@ const styles = StyleSheet.create({
     },
     image:{
         width: '100%',
-        height: '60%',
+        height: '57%',
         alignItems: 'center'
     },
     details:{
@@ -75,7 +84,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginHorizontal: 10,
+        marginHorizontal: 0,
         marginTop: 5
     }
 });

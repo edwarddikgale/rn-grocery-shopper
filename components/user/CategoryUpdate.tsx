@@ -10,7 +10,7 @@ const CategoryUpdate = (props: any) => {
 
     const [category, setCategory] = useState<ProductCategory>(props.category || {} as ProductCategory);
     const handleTextChange = (text: string) => {
-        setCategory({title: text, id: ''});
+        setCategory({...category, title: text});
     }
 
     return (
@@ -30,13 +30,37 @@ const CategoryUpdate = (props: any) => {
                         color={'red'} 
                         onPress={props.onCancel} /> 
                 </View>
-                <View style={styles.button}>
-                    <Button 
-                        title={'  ADD +  '} 
-                        onPress={() => props.onAdd(category)} 
-                        disabled={!category || !category.title || category.title.length === 0}
-                        />    
-                </View>                           
+                {
+                    !category.id &&
+                    <View style={styles.button}>
+                        <Button 
+                            title={'  ADD +  '} 
+                            onPress={() => props.onAdd(category)} 
+                            disabled={!category || !category.title || category.title.length === 0}
+                            />    
+                    </View>   
+                } 
+                {
+                    category.id &&
+                    <View style={styles.button}>
+                        <Button 
+                            title={'  DELETE  '} 
+                            color={'red'} 
+                            onPress={() => props.onDelete(category)} 
+                            disabled={!category || !category.title || category.title.length === 0}
+                            />    
+                    </View>   
+                }  
+                {
+                    category.id &&
+                    <View style={styles.button}>
+                        <Button 
+                            title={'  UPDATE  '} 
+                            onPress={() => props.onUpdate(category)} 
+                            disabled={!category || !category.title || category.title.length === 0}
+                            />    
+                    </View>   
+                }                      
             </View>
         </View>   
     )
@@ -58,11 +82,13 @@ const styles = StyleSheet.create({
     inputGroup:{
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 5
+        padding: 5,
+        marginLeft: -10
     },
     button:{
-        margin: 5,
-        width: Dimensions.get('window').width/3
+        marginTop: 10,
+        marginHorizontal: 5,
+        width: Dimensions.get('window').width/4
     }
 });
 

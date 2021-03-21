@@ -28,7 +28,7 @@ const ProductListScreen = (props: any) => {
     const [filterText, setFilterText] = useState<string>('');
     const [userId, setUserId] = useState<string>();
     const products = useSelector((state: IAppState) => state.products.userProducts);
-    const [product, setProduct] = useState<Product>();
+    const [product, setProduct] = useState<Product>({price: 0.00} as Product);
     const categories = useSelector((state: IAppState) => state.categories.categories);
 
     const floatBtnActions: IActionProps[] | undefined = [];
@@ -87,7 +87,7 @@ const ProductListScreen = (props: any) => {
     }
 
     const onLeftAction = (rowKey:string) => {
-        console.log('onLeftAction', rowKey);
+        //console.log('onLeftAction', rowKey);
     };
 
     const handleFilter = (text: string) => {
@@ -102,7 +102,7 @@ const ProductListScreen = (props: any) => {
         const products = [...sortedProducts];
         setFilteredProducts(products.filter(product => 
             product.title.toLowerCase().indexOf(filterText) >= 0
-            || product.category.toLowerCase().indexOf(filterText) >= 0
+            || product.category?.toLowerCase().indexOf(filterText) >= 0
         ));
     }
 

@@ -15,7 +15,9 @@ interface IProps{
 
 const ProductUpdate = (props: any) => {
 
-    const [product, setProduct] = useState<Product>(props.product? props.product : {} as Product);
+    const [product, setProduct] = useState<Product>(props.product? props.product : {price: 0.00} as Product);
+    const [priceText, setPriceText] = useState<string>(product.price? product.price.toString() : '0.00');
+
     const categories: ProductCategory[] = props.categories;
     const categoryItems = categories.map((cat:ProductCategory) => { 
         return {
@@ -29,7 +31,13 @@ const ProductUpdate = (props: any) => {
 
     const handleTitleChange = (text: string) => { setProduct({...product,title: text}); }
 
-    const handlePriceChange = (text: any) => { setProduct({...product, price: text}); }
+    const handlePriceChange = (text: any) => { 
+        //if (/^\d+$/.test(text))
+        //if(isNaN(text)){
+            setProduct({...product, price: parseFloat(text)}); 
+            setPriceText(text);
+        //}
+    }
 
     const handleStockChange = (value: number) => { setProduct({...product, stockPercentage: value}); }
 
@@ -77,9 +85,9 @@ const ProductUpdate = (props: any) => {
                 <View>
                     <Text style={styles.textLabel}>Price/Cost €:</Text> 
                     <CustomTextInput 
-                        onChangeText={handlePriceChange}
+                        onChangeText={(text: any) => handlePriceChange(text)}
                         placeholder='Product Price'
-                        value={isNaN(product.price)? '' : String(product.price)}
+                        value={priceText}
                         style={{...styles.textInput, ...styles.fullInput}}
                         keyboardType='decimal-pad'
                     />     

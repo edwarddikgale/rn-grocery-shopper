@@ -33,13 +33,29 @@ const CategoryListScreen = (props: any) => {
     }, [userId]);  
     
 
-    const onSaveCategoryHandler = (category: ProductCategory) => { 
+    const onAddCategoryHandler = (category: ProductCategory) => { 
 
         const matches = categories.filter(cat => cat.title === category.title);
-        if(!category || !category.title || category.title.length == 0) return;
+        if(!category || !category.title || category.title.length == 0 || matches.length > 0) return;
 
         if(userId){        
             dispatch(actions.addProductCategory(userId, category));
+            setModalVisible(false);
+        }
+    }
+
+    const onDeleteCategoryHandler = (category: ProductCategory) => { 
+
+        if(userId){        
+            dispatch(actions.deleteProductCategory(userId, category.id));
+            setModalVisible(false);
+        }
+    }
+
+    const onUpdateCategoryHandler = (category: ProductCategory) => { 
+
+        if(userId){        
+            dispatch(actions.updateProductCategory(userId, category));
             setModalVisible(false);
         }
     }
@@ -49,6 +65,11 @@ const CategoryListScreen = (props: any) => {
     const onViewDetails = (category: ProductCategory) => {
         setCategory(category);
         setModalVisible(true);
+    }
+
+    const addNewCategory = () => {
+        setCategory({} as ProductCategory);
+        setModalVisible(modalVisible => !modalVisible);
     }
 
     const renderItem = (itemData: {item: ProductCategory}) => {
@@ -85,7 +106,9 @@ const CategoryListScreen = (props: any) => {
                             <View style={styles.modalView}>
                                 <CategoryUpdate 
                                     category={category}
-                                    onAdd={onSaveCategoryHandler}
+                                    onAdd={onAddCategoryHandler}
+                                    onUpdate={onUpdateCategoryHandler}
+                                    onDelete={onDeleteCategoryHandler}
                                     onCancel={cancelModal}
                                 />
 
@@ -105,7 +128,7 @@ const CategoryListScreen = (props: any) => {
             </View>
 
             <View style={styles.floatButton}>
-                <TouchableOpacity onPress={() => setModalVisible(modalVisible => !modalVisible)} activeOpacity={.5} >
+                <TouchableOpacity onPress={() => addNewCategory()} activeOpacity={.5} >
                     <Ionicons name='ios-add' size={40} />
                 </TouchableOpacity>        
             </View>

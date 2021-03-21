@@ -118,7 +118,6 @@ export const addProduct = (uid: string, payload: Product): any => {
       if(uid){
 
         const userPath = `stock/${uid}/products`;
-        console.log('dispatching add product');
         payload.id = payload.id || Generator.guid();
         
         return getFirebase()

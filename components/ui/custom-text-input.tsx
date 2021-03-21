@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, TextInput } from 'react-native';
+import { View, StyleSheet, TextInput } from 'react-native';
 
 
 const CustomTextInput = (props: any) => {
@@ -11,7 +11,7 @@ const CustomTextInput = (props: any) => {
                     maxLength={props.maxLength || 20}
                     onChangeText={props.onChangeText}
                     value={props.value}
-                    keyboardType={props.keyboardType ? props.keyboardType: 'default'}
+                    keyboardType={props.keyboardType || 'default'}
                 />
             </View>
     )

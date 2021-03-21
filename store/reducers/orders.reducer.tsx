@@ -6,7 +6,6 @@ export default(state: IOrderState = initialState, action: any) => {
     switch(action.type){
     
         case orderActions.ADD_ORDER_SUCCESS: 
-            console.log('order payload ' + JSON.stringify(action.payload));
 
             const newOrder = {
                 id: new Date().toString(),
@@ -18,6 +17,14 @@ export default(state: IOrderState = initialState, action: any) => {
             return {
                 ...state,
                 orders: state.orders.concat(newOrder)
+            }
+        
+        case orderActions.GET_ORDER_SUCCESS: 
+            console.log('order reloaded as ' + JSON.stringify(action.payload));
+
+            return {
+                ...state,
+                orders: action.payload as Order[]
             }
 
     }

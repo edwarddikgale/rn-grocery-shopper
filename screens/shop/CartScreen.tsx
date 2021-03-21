@@ -29,8 +29,8 @@ const CartScreen = (props:any) => {
     }, [userId]); 
 
     const cartItems:CardItem[] = useSelector((state: IAppState) => {
-        const cartItemArr: CardItem[] = [];
 
+        let cartItemArr: CardItem[] = [];
         for(const key in state.cart.items){
             const cartItem = state.cart.items[key];
             cartItemArr.push({
@@ -65,8 +65,6 @@ const CartScreen = (props:any) => {
         if(userId){
             dispatch(ordersActions.addOrder(userId, {cartItems, totalAmount}));
             dispatch(clearCart(userId));
-            //clear cart
-            //update the products
         }
             
     }
