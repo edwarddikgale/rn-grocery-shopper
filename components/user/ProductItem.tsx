@@ -3,7 +3,7 @@ import {View, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback
 import SummaryCircle from '../../components/ui/summary-circle';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import StockLabel from '../ui/stock-label';
 
 TimeAgo.addDefaultLocale(en);
 
@@ -17,31 +17,6 @@ const ProductItem = (props: any) => {
     const prodHeight = showImage? 300: 80;
 
     const timeAgo = new TimeAgo('en-US');
-    console.log('Product:: ' + JSON.stringify(props.item));
-
-    const stockLabel = (stockPerc: any) => {
-        let Label = <Text style={styles.stockFinished}> Finished </Text>;
-
-        if(!stockPerc || stockPerc == 0)
-            return Label;
-        
-        if(stockPerc > 0 && stockPerc <= 25)
-            Label = <Text style={styles.stockVeryLow}> Very Low </Text>;    
-
-        if(stockPerc > 25 && stockPerc <= 50)
-            Label = <Text style={styles.stockLow}> Low </Text>;  
-        
-        if(stockPerc > 50 && stockPerc <= 75)
-            Label = <Text style={styles.stockOk}> OK </Text>; 
-
-        if(stockPerc > 75 && stockPerc <= 99)
-            Label = <Text style={styles.stockHealthy}> Healthy </Text>;  
-
-        if(stockPerc > 99)
-            Label = <Text style={styles.stockFull}> Full </Text>;  
-
-        return Label;
-    }
 
     return( 
         <View style={{...styles.product, height: prodHeight}}>
@@ -62,9 +37,11 @@ const ProductItem = (props: any) => {
                         <View style={styles.details}>
                             <View style={styles.titleContainer}>
                                 <Text style={styles.title}>{props.item.title}</Text>
-                                <Text style={styles.stockPercentage}>
-                                    {stockLabel(props.item.stockPercentage)}
-                                </Text>
+                                <View style={styles.stockPercentage}>
+                                    <StockLabel
+                                        stockPercentage = {props.item.stockPercentage} 
+                                    />
+                                </View>
                             </View>
                             <Text style={styles.category}>{props.item.category}</Text>
                             <Text style={styles.price}>
@@ -147,53 +124,12 @@ const styles = StyleSheet.create({
         fontFamily: 'open-sans',
         marginRight: 30,
         marginTop: 5,
-        width: 75 ,
+        width: 75,
         borderRadius: 10,
         overflow: 'hidden',
-        padding: 1,
-        backgroundColor: 'transparent'
-    },
-    stockFinished:{
-        backgroundColor: 'red',
-        color: 'white',
+        paddingLeft: 5,
+        backgroundColor: 'transparent',
         justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',
-    },
-    stockVeryLow:{
-        backgroundColor: 'pink',
-        color: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase', 
-    },
-    stockLow:{
-        backgroundColor: 'yellow',
-        color: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase', 
-    },
-    stockOk:{
-        backgroundColor: 'orange',
-        color: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase', 
-    },
-    stockHealthy:{
-        backgroundColor: 'blue',
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase', 
-    },
-    stockFull:{
-        backgroundColor: 'green',
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',       
     }
 });
 

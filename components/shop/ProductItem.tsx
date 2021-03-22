@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
 import Colors from '../../constants/Colors';
 import { CardItem } from '../../models/cart-item';
+import StockLabel from '../ui/stock-label';
 
 const ProductItem = (props: any) => {
     let TouchableComponent: any = TouchableOpacity;
@@ -28,6 +29,12 @@ const ProductItem = (props: any) => {
                     </View>
                     <View style={styles.actions}>
                         <Button title='View Details' onPress={props.onViewDetails} />
+                        <View style={styles.stockPercentage}>
+                            <StockLabel
+                                stockPercentage = {props.item.stockPercentage}
+                                style={{padding: 5, fontSize: 14}} 
+                            />
+                        </View>
                         <Button title={cartItem? cartItem.quantity + ' In Cart +': 'To Cart'} color={cartItem? Colors.green: Colors.buttonSubmit } onPress={props.onAddToCart} />
                     </View>
                     {
@@ -86,6 +93,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 0,
         marginTop: 5
+    },
+    stockPercentage:{
+        fontFamily: 'open-sans',
+        marginRight: 30,
+        marginTop: 5,
+        width: 95,
+        borderRadius: 20,
+        overflow: 'hidden',
+        paddingLeft: 5,
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
     }
 });
 
