@@ -2,6 +2,7 @@ import Product from '../../models/product';
 import {IAction} from './action.interface';
 import thunk from 'redux-thunk';
 import { ICartState } from '../state/cart.state';
+import { CardItem, CartProdMap } from '../../models/cart-item';
 
 interface ICartAction extends IAction{
     (payload: Product): {type: string, payload: Product}
@@ -65,15 +66,20 @@ export const addToCart = (uid: string, payload: Product): any => {
     return (dispatch: any, getState: any, getFirebase: any) => {
 
       dispatch(addToCartStart()); 
+
       //let now = new Date(new Date());
       //payload.lastUpdated = now.getTime();
 
-      const cartPath = `cart/${uid}`; 
-      return getFirebase()
-        .ref(cartPath)
-        .push(payload)
-        .then(() => {
-          dispatch(addToCartSuccess(payload))
+      const product = {...payload, cartQuantity: payload.cartQuantity? payload.cartQuantity + 1: 1};  
+      const cartItemPath = payload.cartId? `cart/${uid}/${payload.cartId}` : `cart/${uid}`;
+      const firebaseRef = getFirebase().ref(cartItemPath)
+      const fbVerbFn = payload.cartId? firebaseRef.update(product) : firebaseRef.push(product);
+
+      return fbVerbFn
+        .then((data:any) => {
+            console.log('fb work done');
+            product.cartId = product.cartId || data.key;
+            dispatch(addToCartSuccess(product))
         })
         .catch((err:any) => {
           dispatch(addToCartFail(err))  
@@ -81,18 +87,21 @@ export const addToCart = (uid: string, payload: Product): any => {
     }
 }
 
-export const removeCartItem = (uid: string, payload: string): any => {
+export const removeCartItem = (uid: string, payload: CardItem): any => {
 
     return (dispatch: any, getState: any, getFirebase: any) => {
+       
+      dispatch(removeCartItemStart(payload.id)); 
 
-      dispatch(removeCartItemStart(payload)); 
-
-      const cartItemPath = `cart/${uid}/${payload}`; 
-      return getFirebase()
-        .ref(cartItemPath)
+      console.log('removing ' + JSON.stringify(payload));
+      const firebase = getFirebase();
+       
+      const cartItemPath = `cart/${uid}/${payload.id}`; 
+      return firebase.ref(cartItemPath)
         .remove()
         .then(() => {
-          dispatch(removeCartItemSuccess(payload))
+            console.log('removed ' + JSON.stringify(payload));
+            dispatch(removeCartItemSuccess(payload.productId))
         })
         .catch((err:any) => {
           dispatch(removeCartItemFail(err))  
@@ -114,7 +123,8 @@ export const getCartFail = (payload: string): {type: string, payload: string} =>
     }
 }
 
-export const getCartSuccess = (payload: Product[]): {type: string, payload: Product[]} => {
+export const getCartSuccess = (payload: Product[]): 
+    {type: string, payload: Product[]} => {
     return {
         type: GET_CART_SUCCESS, 
         payload: payload
@@ -133,10 +143,12 @@ export const getCart = (uid: string): any => {
             return getFirebase()
                 .ref(cartPath)
                 .once('value', (snap: any[]) => {
+
                     let products: Product[] = [];
+
                     snap.forEach(data => {
                         let product = data.val() as Product;
-                        product.id = product.id || data.key;
+                        product.cartId = data.key;
                         products.push(product);
                     });
 

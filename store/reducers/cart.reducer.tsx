@@ -33,7 +33,8 @@ export default (state: ICartState = initialState, action: any) => {
                 price: product.price,
                 quantity: 1,
                 total: product.price,
-                productId: product.id 
+                productId: product.id,
+                id: ''
             };
             
             return {
@@ -46,11 +47,13 @@ export default (state: ICartState = initialState, action: any) => {
 
         case actionTypes.ADD_TO_CART_SUCCESS:  
             products = [action.payload];
-            productSum = 0;
+            let productSum = 0;
+            let productCount = 0
             cartItems = {...state.items};
-        
+
             products.forEach(product => {
-                productSum += product.price;
+                productSum += (product.cartQuantity || 1) * product.price;
+                productCount += (product.cartQuantity || 1);
                 cartItems = addOrUpdateCartItem(cartItems, product).items;
             });
 
@@ -58,7 +61,7 @@ export default (state: ICartState = initialState, action: any) => {
                 ...state,
                 items: {...cartItems},
                 totalAmount: state.totalAmount + productSum,
-                count: state.count + products.length
+                count: state.count + productCount
             };   
 
         case actionTypes.REMOVE_CART_ITEM_SUCCESS:
@@ -94,7 +97,6 @@ export default (state: ICartState = initialState, action: any) => {
                 else
                     cartItems = {...state.items, [cartItemId]: updatedCartItem}
 
-
                 return {
                     ...state,
                     items: cartItems,
@@ -124,6 +126,7 @@ export default (state: ICartState = initialState, action: any) => {
                 
         case actionTypes.GET_CART_SUCCESS:
             products = action.payload;
+
             productSum = 0;
             cartItems = {...state.items};
           

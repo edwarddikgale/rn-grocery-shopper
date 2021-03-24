@@ -2,6 +2,7 @@ import React from 'react';
 import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
 import Colors from '../../constants/Colors';
 import { CardItem } from '../../models/cart-item';
+import productCategoryReducer from '../../store/reducers/product.category.reducer';
 import StockLabel from '../ui/stock-label';
 
 const ProductItem = (props: any) => {
@@ -35,7 +36,11 @@ const ProductItem = (props: any) => {
                                 style={{padding: 5, fontSize: 14}} 
                             />
                         </View>
-                        <Button title={cartItem? cartItem.quantity + ' In Cart +': 'To Cart'} color={cartItem? Colors.green: Colors.buttonSubmit } onPress={props.onAddToCart} />
+                        <Button 
+                            title={cartItem? cartItem.quantity + ' In Cart +': 'To Cart'} 
+                            color={cartItem? Colors.green: Colors.buttonSubmit } 
+                            onPress={props.onAddToCart} 
+                            />
                     </View>
                     {
                     cartItem &&    

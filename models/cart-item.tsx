@@ -3,5 +3,6 @@ export interface CardItem{
     price: number,
     title: string,
     total: number,
-    productId: string   
+    productId: string,
+    id: string 
 }

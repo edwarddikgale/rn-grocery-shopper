@@ -8,7 +8,9 @@ export default interface Product{
     category:string;
     stockPercentage: number;
     lastUpdated: number;
-    lastOrderQuantity: number
+    lastOrderQuantity: number;
+    cartQuantity: number;
+    cartId:string;
 }
 
 

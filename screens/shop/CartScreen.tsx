@@ -34,11 +34,12 @@ const CartScreen = (props:any) => {
         for(const key in state.cart.items){
             const cartItem = state.cart.items[key];
             cartItemArr.push({
-                productId: key,
+                productId: cartItem.productId,
                 price: cartItem.price,
                 title: cartItem.title,
                 total: cartItem.total,
-                quantity: cartItem.quantity         
+                quantity: cartItem.quantity,
+                id: cartItem.id        
             });
         }
 
@@ -46,9 +47,11 @@ const CartScreen = (props:any) => {
         return sortedCartItems;
     });
 
-    const removeItem = (prodId?: string) => {
-        if(userId && prodId)
-            dispatch(removeCartItem(userId, prodId))
+    const removeItem = (item: CardItem) => {
+
+        if(userId){
+            dispatch(removeCartItem(userId, item));
+        }
     }
 
     const incrementItem = (prodId?: string) => {
@@ -96,7 +99,7 @@ const CartScreen = (props:any) => {
                             <Ionicons name='ios-add-circle' color={'gray'} size={28} />
                         </View>
                     </TouchableWithoutFeedback>  
-                    <TouchableWithoutFeedback onPress={()=> removeItem(item.productId)}>
+                    <TouchableWithoutFeedback onPress={()=> removeItem(item)}>
                         <View style={styles.cartItemAction}>
                             <Ionicons name='ios-trash' color={'red'} size={28} />
                         </View>
