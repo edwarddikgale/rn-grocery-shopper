@@ -84,7 +84,6 @@ const CartScreen = (props:any) => {
             <View style={styles.cartItem}>
                 <View style={styles.cartItemContent}>
                     <Text style={styles.itemTitle}>{item.title}</Text>
-                    <Text style={styles.itemQuantity}>x {item.quantity}</Text>
                     <Text style={styles.itemTotal}>€{item.total}</Text>
                 </View>
                 <View style={styles.cartItemActions}> 
@@ -94,16 +93,12 @@ const CartScreen = (props:any) => {
                             <Ionicons name='ios-remove-circle' color={'gray'} size={28} />
                         </View>
                     </TouchableWithoutFeedback>
+                    <Text style={styles.itemQuantity}>{item.quantity}</Text>
                     <TouchableWithoutFeedback onPress={()=> incrementItem(item.productId)}>
                         <View style={styles.cartItemAction}>
                             <Ionicons name='ios-add-circle' color={'gray'} size={28} />
                         </View>
                     </TouchableWithoutFeedback>  
-                    <TouchableWithoutFeedback onPress={()=> removeItem(item)}>
-                        <View style={styles.cartItemAction}>
-                            <Ionicons name='ios-trash' color={'red'} size={28} />
-                        </View>
-                    </TouchableWithoutFeedback>
                 </View>
 
             </View>
@@ -196,18 +191,20 @@ const styles= StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 15,
-        marginLeft: Dimensions.get('window').width/4 + 20
+        marginLeft: Dimensions.get('window').width - 200
     },
     cartItemAction:{
-        width: Dimensions.get('window').width/4
+        width: Dimensions.get('window').width/8
     },
     itemTitle:{
         width: '70%'
     },
     itemQuantity:{
         width: '10%',
-        paddingHorizontal: 5,
-        color: 'gray'
+        marginRight: 20,
+        color: 'gray',
+        fontSize: 18,
+        fontWeight: 'bold'
     },
     itemTotal:{
         width: '20%',

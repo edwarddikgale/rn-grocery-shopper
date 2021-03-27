@@ -1,5 +1,6 @@
 import React from 'react';
-import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform} from 'react-native';
+import {View, Button, Text, Image, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform, TouchableWithoutFeedback} from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
 import { CardItem } from '../../models/cart-item';
 import productCategoryReducer from '../../store/reducers/product.category.reducer';
@@ -25,22 +26,30 @@ const ProductItem = (props: any) => {
                         <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
                     }
                     <View style={styles.details}>
-                        <Text style={styles.title}>{props.item.title}</Text>
-                        <Text style={styles.price}>€ {itemPrice }</Text>
-                    </View>
-                    <View style={styles.actions}>
-                        <Button title='View Details' onPress={props.onViewDetails} />
+                        <View>
+                            <Text style={styles.title}>{props.item.title}</Text>
+                            <Text style={styles.price}>€ {itemPrice }</Text>
+                        </View>
                         <View style={styles.stockPercentage}>
                             <StockLabel
                                 stockPercentage = {props.item.stockPercentage}
-                                style={{padding: 5, fontSize: 14}} 
+                                style={{padding: 5, fontSize: 10}} 
                             />
                         </View>
-                        <Button 
-                            title={cartItem? cartItem.quantity + ' In Cart +': 'To Cart'} 
-                            color={cartItem? Colors.green: Colors.buttonSubmit } 
-                            onPress={props.onAddToCart} 
-                            />
+                    </View>
+                    <View style={styles.actions}>
+                        <TouchableWithoutFeedback onPress={props.onViewDetails}>
+                            <View style={styles.viewDetails}>
+                                <Ionicons name='ios-information-circle-outline' color={'green'} size={28} />
+                            </View>
+                        </TouchableWithoutFeedback>    
+
+                        <TouchableWithoutFeedback onPress={props.onAddToCart}>
+                            <View style={styles.addToCart}>
+                                <Text>{cartItem? cartItem.quantity + ' +': ''}</Text>
+                                <Ionicons name='ios-cart' color={Colors.primary} size={28} />
+                            </View>
+                        </TouchableWithoutFeedback>    
                     </View>
                     {
                     cartItem &&    
@@ -64,7 +73,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         borderRadius: 10,
         backgroundColor: 'white',
-        height: 300,
+        height: 275,
         margin: 20,
         padding: 5
     },
@@ -74,17 +83,18 @@ const styles = StyleSheet.create({
     },
     image:{
         width: '100%',
-        height: '57%',
+        height: '55%',
         alignItems: 'center'
     },
     details:{
+       flexDirection: 'row',
+       justifyContent: 'space-evenly', 
        width: '100%',
        padding: 10,
-       height: '25%' 
+       height: '30%' 
     },
     title:{
         fontSize: 17,
-        margin: 5,
         fontFamily: 'open-sans-bold'
     },
     price:{
@@ -101,14 +111,19 @@ const styles = StyleSheet.create({
     },
     stockPercentage:{
         fontFamily: 'open-sans',
-        marginRight: 30,
-        marginTop: 5,
         width: 95,
         borderRadius: 20,
-        overflow: 'hidden',
-        paddingLeft: 5,
-        backgroundColor: 'transparent',
-        justifyContent: 'center',
+
+    },
+    addToCart:{
+        marginHorizontal: 15,
+        marginTop: -5,
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    },
+    viewDetails:{
+        marginHorizontal: 15,
+        marginTop: -5,       
     }
 });
 
