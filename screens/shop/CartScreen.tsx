@@ -224,11 +224,12 @@ const styles= StyleSheet.create({
     },
     cartItems:{
         marginHorizontal: 5,
+        
     },
     cartItem:{
         alignItems: 'center',
         marginBottom: 5,
-        padding: 10,
+        padding: 0,
         borderColor: Colors.lightGray,
         borderWidth: 1,
         borderRadius: 10,
@@ -252,7 +253,7 @@ const styles= StyleSheet.create({
     },
     itemQuantity:{
         width: '10%',
-        marginRight: 20,
+        marginRight: 22,
         color: 'gray',
         fontSize: 18,
         fontWeight: 'bold'
