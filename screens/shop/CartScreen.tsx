@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Text, View, FlatList, Button, StyleSheet, Image, TouchableHighlight, Dimensions, TouchableWithoutFeedback} from 'react-native';
+import {Text, View, FlatList, Button, StyleSheet, Image, TouchableHighlight, Dimensions, TouchableWithoutFeedback, Animated} from 'react-native';
 import {IAppState} from '../../store/state/app.state';
 import {CardItem} from '../../models/cart-item';
 import {clearCart, removeCartItem, incrementCartItem, decrementCartItem, getCart} from '../../store/actions/cart.actions';
@@ -8,6 +8,8 @@ import * as ordersActions from '../../store/actions/orders.actions';
 import Colors from '../../constants/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LocalCache from '../../utils/local.cache';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import HiddenItemWithActions from '../common/HiddenItemWithActions';
 
 const CartScreen = (props:any) => {
 
@@ -78,7 +80,7 @@ const CartScreen = (props:any) => {
         }
     }
 
-    const _renderItem = (itemData: any) =>{
+    const renderItem = (itemData: any) =>{
         const item: CardItem = itemData.item;
         return (
             <View style={styles.cartItem}>
@@ -105,6 +107,42 @@ const CartScreen = (props:any) => {
         )
     }
 
+    const closeRow = (rowMap: any, rowKey: string) => {
+        console.log(rowKey);
+        if (rowMap[rowKey]) {
+            rowMap[rowKey].closeRow();
+        }
+    };
+
+    const deleteRow = (rowMap: any, rowKey: string) => {
+        closeRow(rowMap, rowKey);
+        if(userId){
+            const item = cartItems.filter(item => item.id === rowKey)[0];            
+            dispatch(removeCartItem(userId, item));
+        }
+    };
+
+    const renderHiddenItem = (itemData: {item: CardItem}, rowMap: any) => {
+
+        const rowActionAnimatedValue = new Animated.Value(75);
+        const rowHeightAnimatedValue = new Animated.Value(50);
+        
+        return(
+            <HiddenItemWithActions
+                data={itemData}
+                rowMap={rowMap}
+                rowActionAnimatedValue={rowActionAnimatedValue}
+                rowHeightAnimatedValue={rowHeightAnimatedValue}
+                onClose={() => closeRow(rowMap, itemData.item.id)}
+                onDelete={() => deleteRow(rowMap, itemData.item.id)}
+            />
+        );    
+    };
+
+    const onLeftAction = (rowKey:string) => {
+        //console.log('onLeftAction', rowKey);
+    };
+
     return (
         <View style={styles.screen}>
             <View style={styles.summary}>
@@ -127,14 +165,25 @@ const CartScreen = (props:any) => {
                     }
                     {
                         cartItems.length == 0 && 
-                        <Text>There are NO items in the cart yet...</Text>
+                        <Text>Your cart yet is empty ...</Text>
                     }
                 </Text>
                 <View style={styles.cartItems}>
-                    <FlatList 
-                        data={cartItems}
-                        keyExtractor={(item) => item.productId || item.title} 
-                        renderItem={_renderItem} />
+
+                    <SwipeListView 
+                        data={cartItems} 
+                        keyExtractor = {(item: CardItem) => item.productId}
+                        renderItem={renderItem}
+                        renderHiddenItem={renderHiddenItem}
+                        useNativeDriver={false}
+                        onLeftAction={onLeftAction}
+                        leftOpenValue={75}
+                        rightOpenValue={-150}
+                        leftActivationValue={100}
+                        rightActivationValue={-200}
+                        leftActionValue={0}
+                        rightActionValue={-500} 
+                    />          
                 </View>
             </View>
         </View>
@@ -143,13 +192,14 @@ const CartScreen = (props:any) => {
 
 const styles= StyleSheet.create({
     screen:{
-        margin: 20
+        marginVertical: 20
     },
     summary:{
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         marginBottom: 20,
+        marginHorizontal: 5,
         padding: 10,
         shadowColor: 'black',
         shadowOpacity: 0.26,
@@ -164,19 +214,20 @@ const styles= StyleSheet.create({
         fontSize: 14
     },
     cartItemsContainer:{
-
+        
     },
     cartItemCountSummary:{
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        marginBottom: 10
+        marginBottom: 10,
+        marginHorizontal: 5,
     },
     cartItems:{
-
+        marginHorizontal: 5,
     },
     cartItem:{
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 5,
         padding: 10,
         borderColor: Colors.lightGray,
         borderWidth: 1,
@@ -191,7 +242,7 @@ const styles= StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 15,
-        marginLeft: Dimensions.get('window').width - 200
+        marginLeft: Dimensions.get('window').width - 160
     },
     cartItemAction:{
         width: Dimensions.get('window').width/8

@@ -97,11 +97,12 @@ const styles = StyleSheet.create({
     },
     rowBack: {
         alignItems: 'center',
-        backgroundColor: '#DDD',
+        backgroundColor: '#FFF',
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
+        marginHorizontal: 5
     },
     backRightBtn: {
         alignItems: 'flex-end',
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
         top: 0,
         width: 75,
         paddingRight: 17,
+        marginVertical: 2
     },
     backRightBtnLeft: {
         backgroundColor: 'blue',
