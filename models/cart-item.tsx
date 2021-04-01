@@ -4,5 +4,6 @@ export interface CardItem{
     title: string,
     total: number,
     productId: string,
-    id: string 
+    id: string,
+    confirm: boolean 
 }

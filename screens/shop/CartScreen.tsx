@@ -41,7 +41,8 @@ const CartScreen = (props:any) => {
                 title: cartItem.title,
                 total: cartItem.total,
                 quantity: cartItem.quantity,
-                id: cartItem.id        
+                id: cartItem.id,
+                confirm: false        
             });
         }
 
@@ -54,6 +55,10 @@ const CartScreen = (props:any) => {
         if(userId){
             dispatch(removeCartItem(userId, item));
         }
+    }
+
+    const confirmItem =  (item: CardItem) => {
+        cartItems.filter(ci => ci.productId === item.productId)[0].confirm = !item.confirm 
     }
 
     const incrementItem = (prodId?: string) => {
@@ -89,7 +94,12 @@ const CartScreen = (props:any) => {
                     <Text style={styles.itemTotal}>€{item.total}</Text>
                 </View>
                 <View style={styles.cartItemActions}> 
-                
+                    <TouchableWithoutFeedback onPress={()=> confirmItem(item)}>
+                        <View style={styles.confirmItemAction}>
+                            {item.confirm}
+                            <Ionicons name='md-checkbox-outline' color={item.confirm? 'green': 'gray'} size={28} />
+                        </View>
+                    </TouchableWithoutFeedback>              
                     <TouchableWithoutFeedback onPress={()=> decrementItem(item.productId)}>
                         <View style={styles.cartItemAction}>
                             <Ionicons name='ios-remove-circle' color={'gray'} size={28} />
@@ -133,7 +143,7 @@ const CartScreen = (props:any) => {
                 rowMap={rowMap}
                 rowActionAnimatedValue={rowActionAnimatedValue}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
-                onClose={() => closeRow(rowMap, itemData.item.id)}
+                onClose={() => closeRow(rowMap, itemData.item.productId)}
                 onDelete={() => deleteRow(rowMap, itemData.item.id)}
             />
         );    
@@ -228,7 +238,7 @@ const styles= StyleSheet.create({
     },
     cartItem:{
         alignItems: 'center',
-        marginBottom: 5,
+        marginBottom: 0,
         padding: 0,
         borderColor: Colors.lightGray,
         borderWidth: 1,
@@ -236,6 +246,7 @@ const styles= StyleSheet.create({
         backgroundColor: 'white', 
     },
     cartItemContent:{
+        paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -243,10 +254,13 @@ const styles= StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 15,
-        marginLeft: Dimensions.get('window').width - 160
+        marginLeft: Dimensions.get('window').width - 220
     },
     cartItemAction:{
         width: Dimensions.get('window').width/8
+    },
+    confirmItemAction:{
+        width: Dimensions.get('window').width/8 + 20
     },
     itemTitle:{
         width: '70%'

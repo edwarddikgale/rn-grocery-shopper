@@ -65,6 +65,7 @@ export default (state: ICartState = initialState, action: any) => {
             };   
 
         case actionTypes.REMOVE_CART_ITEM_SUCCESS:
+
             if(state.items[action.payload]){
                 const removedItem = {...state.items[action.payload]};
                 delete state.items[action.payload];
@@ -74,8 +75,8 @@ export default (state: ICartState = initialState, action: any) => {
                     items:{
                         ...state.items      
                     },
-                    totalAmount: state.totalAmount - removedItem.price,
-                    count: state.count - 1
+                    totalAmount: state.totalAmount - (removedItem.quantity * removedItem.price),
+                    count: state.count - removedItem.quantity
                 }                
             }  
 
