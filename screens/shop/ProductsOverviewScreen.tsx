@@ -32,7 +32,8 @@ const ProductsOverviewScreen = (props:any) =>{
                 title: cartItem.title,
                 total: cartItem.total,
                 quantity: cartItem.quantity,
-                id: cartItem.id         
+                id: cartItem.id,
+                confirm: cartItem.confirm         
             });
         }
 
@@ -41,16 +42,20 @@ const ProductsOverviewScreen = (props:any) =>{
     });
 
     const sortedProducts = products.sort((a,b) => a.title > b.title? 1: -1);
+
     const productCartItem = (productId: string): CardItem => {
         const items = cartItems.filter((item: CardItem) => item.productId === productId);
         return items && items.length > 0 ? items[0]: undefined as unknown as CardItem;
     }
 
-    /*
-    products.forEach(prod => {
-        if(!productCartItem(prod.id)) 
-            prod.cartQuantity = 0;
-    });*/
+    
+    sortedProducts.forEach(prod => {
+        const prodCartItem = productCartItem(prod.id);
+        if(prodCartItem){
+            prod.cartQuantity = prodCartItem.quantity;
+            prod.cartId = prodCartItem.id;
+        }
+    });
 
     let user: firebase.User;
     LocalCache.getData('user').then(data => {

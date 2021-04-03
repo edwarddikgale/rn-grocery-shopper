@@ -95,7 +95,7 @@ export const updateProductStart = (): {type: string, payload: boolean} => {
     }
 }
 
-export const updateProductSuccess = (payload: Product[]): {type: string, payload: Product[]} => {
+export const updateProductSuccess = (payload: Product): {type: string, payload: Product} => {
     return {
         type: UPDATE_PRODUCT_SUCCESS, 
         payload: payload
@@ -176,7 +176,7 @@ export const updateProduct = (uid: string, payload: Product): any => {
             .ref(path)
             .update(payload)
             .then(() => {
-                dispatch(updateProductSuccess(payload as unknown as Product[]))
+                dispatch(updateProductSuccess(payload as unknown as Product))
             })
             .catch((err:any) => {
                 dispatch(updateProductFailure(err))  

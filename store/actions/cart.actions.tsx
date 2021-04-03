@@ -2,7 +2,8 @@ import Product from '../../models/product';
 import {IAction} from './action.interface';
 import thunk from 'redux-thunk';
 import { ICartState } from '../state/cart.state';
-import { CardItem, CartProdMap } from '../../models/cart-item';
+import { CardItem } from '../../models/cart-item';
+import { updateProduct } from '../actions/products.actions';
 
 interface ICartAction extends IAction{
     (payload: Product): {type: string, payload: Product}
@@ -24,7 +25,14 @@ export const REMOVE_CART_ITEM_SUCCESS = 'REMOVE_CART_ITEM_SUCCESS';
 export const REMOVE_CART_ITEM_FAIL = 'REMOVE_CART_ITEM_FAIL';
 
 export const DECREMENT_CART_ITEM = 'DECREMENT_CART_ITEM';
+export const DECREMENT_CART_ITEM_START = 'DECREMENT_CART_ITEM_START';
+export const DECREMENT_CART_ITEM_SUCCESS = 'DECREMENT_CART_ITEM_SUCCESS';
+export const DECREMENT_CART_ITEM_FAIL = 'DECREMENT_CART_ITEM_FAIL';
+
 export const INCREMENT_CART_ITEM = 'INCREMENT_CART_ITEM';
+export const INCREMENT_CART_ITEM_START = 'INCREMENT_CART_ITEM_START';
+export const INCREMENT_CART_ITEM_SUCCESS = 'INCREMENT_CART_ITEM_SUCCESS';
+export const INCREMENT_CART_ITEM_FAIL = 'INCREMENT_CART_ITEM_FAIL';
 
 export const UserNotAuthError = 'User not authorised';
 
@@ -69,15 +77,15 @@ export const addToCart = (uid: string, payload: Product): any => {
 
       //let now = new Date(new Date());
       //payload.lastUpdated = now.getTime();
+      const quantity = payload.cartQuantity? payload.cartQuantity + 1: 1; 
+      const product = {...payload, cartQuantity: quantity}; 
 
-      const product = {...payload, cartQuantity: payload.cartQuantity? payload.cartQuantity + 1: 1};  
       const cartItemPath = payload.cartId? `cart/${uid}/${payload.cartId}` : `cart/${uid}`;
       const firebaseRef = getFirebase().ref(cartItemPath)
       const fbVerbFn = payload.cartId? firebaseRef.update(product) : firebaseRef.push(product);
 
       return fbVerbFn
         .then((data:any) => {
-            console.log('fb work done');
             product.cartId = product.cartId || data.key;
             dispatch(addToCartSuccess(product))
         })
@@ -87,20 +95,67 @@ export const addToCart = (uid: string, payload: Product): any => {
     }
 }
 
+export const incrementCartItem = (uid: string, payload: CardItem): any => {
+
+    return (dispatch: any, getState: any, getFirebase: any) => {
+
+      dispatch(addToCartStart()); 
+
+      const item = {...payload, quantity: payload.quantity + 1} as CardItem; 
+      const product = {cartQuantity: payload.quantity + 1}; 
+
+      const cartItemPath = `cart/${uid}/${item.id}`;
+      const firebaseRef = getFirebase().ref(cartItemPath)
+      const fbVerbFn = firebaseRef.update(product);
+
+      return fbVerbFn
+        .then((data:any) => {
+            console.log('Updated...' + JSON.stringify(payload));
+            dispatch(incrementCartItemSuccess(item.productId))
+        })
+        .catch((err:any) => {
+          dispatch(incrementCartItemFail(err))  
+        })
+    }
+}
+
+export const decrementCartItem = (uid: string, payload: CardItem): any => {
+
+    return (dispatch: any, getState: any, getFirebase: any) => {
+
+      dispatch(addToCartStart()); 
+
+      const item = {...payload, quantity: payload.quantity - 1} as CardItem; 
+      const product = {cartQuantity: payload.quantity - 1}; 
+
+      const cartItemPath = `cart/${uid}/${item.id}`;
+      const firebaseRef = getFirebase().ref(cartItemPath)
+      const fbVerbFn = firebaseRef.update(product);
+
+      return fbVerbFn
+        .then((data:any) => {
+            dispatch(decrementCartItemSuccess(item.productId));
+            if(item.quantity === 0)
+                dispatch(removeCartItem(uid, payload));
+        })
+        .catch((err:any) => {
+          dispatch(decrementCartItemFail(err))  
+        })
+    }
+}
+
 export const removeCartItem = (uid: string, payload: CardItem): any => {
 
     return (dispatch: any, getState: any, getFirebase: any) => {
        
       dispatch(removeCartItemStart(payload.id)); 
-
-      console.log('removing ' + JSON.stringify(payload));
+  
       const firebase = getFirebase();
        
       const cartItemPath = `cart/${uid}/${payload.id}`; 
       return firebase.ref(cartItemPath)
         .remove()
         .then(() => {
-            console.log('removed ' + JSON.stringify(payload));
             dispatch(removeCartItemSuccess(payload.productId))
         })
         .catch((err:any) => {
@@ -222,16 +277,42 @@ export const removeCartItemFail = (payload: string) => {
     }
 }
 
-export const decrementCartItem = (payload: string) => {
+export const decrementCartItemStart = () => {
     return {
-        type: DECREMENT_CART_ITEM,
+        type: DECREMENT_CART_ITEM_START
+    }
+}
+
+export const decrementCartItemSuccess = (payload: string) => {
+    return {
+        type: DECREMENT_CART_ITEM_SUCCESS,
         payload: payload
     }
 }
 
-export const incrementCartItem = (payload: string) => {
+export const decrementCartItemFail = (payload: string) => {
     return {
-        type: INCREMENT_CART_ITEM,
+        type: DECREMENT_CART_ITEM_FAIL,
+        payload: payload
+    }
+}
+
+export const incrementCartItemStart = () => {
+    return {
+        type: INCREMENT_CART_ITEM_START
+    }
+}
+
+export const incrementCartItemSuccess = (payload: string) => {
+    return {
+        type: INCREMENT_CART_ITEM_SUCCESS,
+        payload: payload
+    }
+}
+
+export const incrementCartItemFail = (payload: string) => {
+    return {
+        type: INCREMENT_CART_ITEM_FAIL,
         payload: payload
     }
 }

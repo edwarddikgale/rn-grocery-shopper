@@ -42,7 +42,7 @@ const CartScreen = (props:any) => {
                 total: cartItem.total,
                 quantity: cartItem.quantity,
                 id: cartItem.id,
-                confirm: false        
+                confirm: cartItem.confirm        
             });
         }
 
@@ -61,14 +61,14 @@ const CartScreen = (props:any) => {
         cartItems.filter(ci => ci.productId === item.productId)[0].confirm = !item.confirm 
     }
 
-    const incrementItem = (prodId?: string) => {
-        if(prodId)
-            dispatch(incrementCartItem(prodId))
+    const incrementItem = (item: CardItem) => {
+        if(userId)
+            dispatch(incrementCartItem(userId, item))
     }
 
-    const decrementItem = (prodId?: string) => {
-        if(prodId)
-            dispatch(decrementCartItem(prodId))
+    const decrementItem = (item: CardItem) => {
+        if(userId)
+            dispatch(decrementCartItem(userId, item))
     }
 
     const orderNow = () => {
@@ -91,7 +91,7 @@ const CartScreen = (props:any) => {
             <View style={styles.cartItem}>
                 <View style={styles.cartItemContent}>
                     <Text style={styles.itemTitle}>{item.title}</Text>
-                    <Text style={styles.itemTotal}>€{item.total}</Text>
+                    <Text style={styles.itemTotal}>€{item.total.toFixed(2)}</Text>
                 </View>
                 <View style={styles.cartItemActions}> 
                     <TouchableWithoutFeedback onPress={()=> confirmItem(item)}>
@@ -100,13 +100,13 @@ const CartScreen = (props:any) => {
                             <Ionicons name='md-checkbox-outline' color={item.confirm? 'green': 'gray'} size={28} />
                         </View>
                     </TouchableWithoutFeedback>              
-                    <TouchableWithoutFeedback onPress={()=> decrementItem(item.productId)}>
+                    <TouchableWithoutFeedback onPress={()=> decrementItem(item)}>
                         <View style={styles.cartItemAction}>
                             <Ionicons name='ios-remove-circle' color={'gray'} size={28} />
                         </View>
                     </TouchableWithoutFeedback>
                     <Text style={styles.itemQuantity}>{item.quantity}</Text>
-                    <TouchableWithoutFeedback onPress={()=> incrementItem(item.productId)}>
+                    <TouchableWithoutFeedback onPress={()=> incrementItem(item)}>
                         <View style={styles.cartItemAction}>
                             <Ionicons name='ios-add-circle' color={'gray'} size={28} />
                         </View>
@@ -175,7 +175,7 @@ const CartScreen = (props:any) => {
                     }
                     {
                         cartItems.length == 0 && 
-                        <Text>Your cart yet is empty ...</Text>
+                        <Text>Your cart is empty ...</Text>
                     }
                 </Text>
                 <View style={styles.cartItems}>

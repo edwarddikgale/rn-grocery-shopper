@@ -13,11 +13,13 @@ export default (state: ICartState = initialState, action: any) => {
     const addOrUpdateCartItem = (items:{[key: string]: CardItem}, product: Product): {items:any} => {
 
         if(items[product.id]){
+
             const currentCartItem = {...items[product.id]};
             const updatedCartItem = {
                 ...currentCartItem, 
-                quantity: currentCartItem.quantity + 1,
-                total: currentCartItem.total + product.price
+                quantity: product.cartQuantity,
+                total: currentCartItem.total + product.price,
+                id: product.cartId
             };
 
             return {
@@ -28,13 +30,15 @@ export default (state: ICartState = initialState, action: any) => {
             }
         }
         else{
+            console.log('adding...');
             const newCartItem:CardItem = {
                 title: product.title,
                 price: product.price,
                 quantity: 1,
                 total: product.price,
                 productId: product.id,
-                id: ''
+                confirm: false,
+                id: product.cartId
             };
             
             return {
@@ -60,8 +64,8 @@ export default (state: ICartState = initialState, action: any) => {
             return {
                 ...state,
                 items: {...cartItems},
-                totalAmount: state.totalAmount + productSum,
-                count: state.count + productCount
+                totalAmount: productSum,
+                count: productCount
             };   
 
         case actionTypes.REMOVE_CART_ITEM_SUCCESS:
@@ -80,7 +84,7 @@ export default (state: ICartState = initialState, action: any) => {
                 }                
             }  
 
-        case actionTypes.DECREMENT_CART_ITEM:
+        case actionTypes.DECREMENT_CART_ITEM_SUCCESS:
 
             if(state.items[action.payload]){
                 const cartItemId = action.payload;
@@ -101,15 +105,17 @@ export default (state: ICartState = initialState, action: any) => {
                 return {
                     ...state,
                     items: cartItems,
-                    totalAmount: state.totalAmount - (updatedCartItem.quantity > 0? currentCartItem.price: 0),
-                    count: state.count + 1
+                    totalAmount: state.totalAmount - currentCartItem.price,
+                    count: state.count - 1
                 }                
             } 
             
-        case actionTypes.INCREMENT_CART_ITEM:
+        case actionTypes.INCREMENT_CART_ITEM_SUCCESS:
 
             if(state.items[action.payload]){
+
                 const cartItemId = action.payload;
+
                 const currentCartItem: CardItem = { ...state.items[cartItemId] };
                 const updatedCartItem = {
                     ...currentCartItem, 
