@@ -25,7 +25,7 @@ const CategoriesNavigator = createStackNavigator({
 });
 
 
-const ProductTabNavigator =  createBottomTabNavigator({
+const StockManagerNavigator =  createBottomTabNavigator({
     Products: ProductsNavigator,
     Categories: CategoriesNavigator
 },
@@ -57,4 +57,4 @@ const ProductTabNavigator =  createBottomTabNavigator({
   }
 );
 
-export default ProductTabNavigator;
+export default StockManagerNavigator;

@@ -10,7 +10,7 @@ import ProductDetailScreen from '../screens/shop/ProductDetailScreen';
 import CartScreen from '../screens/shop/CartScreen';
 import OrdersScreen from '../screens/shop/OrdersScreen';
 
-import ProductsManagerNavigator from './ProductTabNavigator';
+import StockManagerNavigator from './StockManagerNavigator';
 import SignInScreen from '../screens/common/SignInScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -21,7 +21,7 @@ const defaultNavOptions = {
     headerTintColor: Platform.OS === 'android'? 'white': Colors.primary
 }
 
-const ProductsNavigator = createStackNavigator({
+const ShoppingNavigator = createStackNavigator({
     ProductsOverview: ProductsOverviewScreen,
     ProductDetails: ProductDetailScreen,
     Cart: CartScreen 
@@ -42,8 +42,8 @@ const AuthNavigator = createStackNavigator({
 });
 
 const ShopNavigator = createDrawerNavigator({
-    Products: { 
-        screen: ProductsNavigator, 
+    Shopping: { 
+        screen: ShoppingNavigator, 
         navigationOptions : () => (
             {
                 title: 'Shop',
@@ -64,8 +64,8 @@ const ShopNavigator = createDrawerNavigator({
             }
         )        
     },
-    ManageProducts: {
-        screen: ProductsManagerNavigator,
+    StockManager: {
+        screen: StockManagerNavigator,
         navigationOptions : () => (
             {
                 title: 'Manage Stock',
