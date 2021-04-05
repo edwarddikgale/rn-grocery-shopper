@@ -16,7 +16,6 @@ const CategoryCarousel = (props: any) => {
     const categories: ProductCategory[] = props.categories;
     const selectedIndex = props.selectedValue? categories.findIndex(cat => cat === props.selectedValue): 1; 
     const [activeSlide, setActiveSlide] = useState(selectedIndex >= 0? selectedIndex : 1);
-    console.log('Active slide: ' + activeSlide);
 
     const updateSelected = (index: number) => {
       if(props.onSelected){

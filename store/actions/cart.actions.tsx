@@ -78,7 +78,7 @@ export const addToCart = (uid: string, payload: Product): any => {
       //let now = new Date(new Date());
       //payload.lastUpdated = now.getTime();
       const quantity = payload.cartQuantity? payload.cartQuantity + 1: 1; 
-      const product = {...payload, cartQuantity: quantity}; 
+      const product = {...payload, cartQuantity: quantity, price: isNaN(payload.price)? 0: payload.price }; 
 
       const cartItemPath = payload.cartId? `cart/${uid}/${payload.cartId}` : `cart/${uid}`;
       const firebaseRef = getFirebase().ref(cartItemPath)

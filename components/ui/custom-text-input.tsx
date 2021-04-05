@@ -6,7 +6,7 @@ const CustomTextInput = (props: any) => {
     return (
             <View style={styles.inputContainer}>
                 <TextInput
-                    style={styles.textInput}
+                    style={{...styles.textInput, ...props.style}}
                     placeholder={props.placeholder}
                     maxLength={props.maxLength || 20}
                     onChangeText={props.onChangeText}

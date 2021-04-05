@@ -152,7 +152,7 @@ const ProductUpdate = (props: any) => {
                             />    
                         </View>  
                     }
-            </View>
+                </View>
 
                             
             </View>            

@@ -17,14 +17,18 @@ import HiddenItemWithActions from '../common/HiddenItemWithActions';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/ui/header-button';
 import {DrawerActions} from 'react-navigation-drawer';
+import Card from '../../components/ui/card';
+import ProductFilter from '../../components/common/product.filter';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
+const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const ProductListScreen = (props: any) => {
 
     const {navigation} = props;
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [showFilter, setShowFilter] = useState<boolean>(false);
+    const [showAdvancedFilter, setShowAdvancedFilter] = useState<boolean>(false);
     const [filterText, setFilterText] = useState<string>('');
     const [userId, setUserId] = useState<string>();
     const products = useSelector((state: IAppState) => state.products.userProducts);
@@ -55,6 +59,7 @@ const ProductListScreen = (props: any) => {
         setFilteredProducts([...sortedProducts]);
         navigation.setParams({
             toggleFilter:  () => toggleFilter(),
+            toggleAdvancedFilter: () => toggleAdvancedFilter(),
             productCount: products.length 
         });
     }, [sortedProducts]);
@@ -79,6 +84,15 @@ const ProductListScreen = (props: any) => {
             dispatch(actions.updateProduct(userId, product));
             setModalVisible(false);            
         }
+    }
+
+    const onApplyAdvFiter = (filters: {availability: string, category: string}) => {
+
+        const products = [...sortedProducts];
+        setFilteredProducts(products.filter(product => 
+            (product.category && product.category.toLowerCase().indexOf(filters.category.toLowerCase()) >= 0)
+            || filters.category.toLowerCase() === 'all'
+        ));        
     }
 
     const onViewDetails = (product: Product) => {
@@ -107,8 +121,11 @@ const ProductListScreen = (props: any) => {
     }
 
     const toggleFilter = () => {
-        console.log('toggle filter');
         setShowFilter(showFilter => !showFilter);
+    }
+
+    const toggleAdvancedFilter = () => {
+        setShowAdvancedFilter(showAdvancedFilter => !showAdvancedFilter);
     }
 
     const closeRow = (rowMap: any, rowKey: string) => {
@@ -188,17 +205,36 @@ const ProductListScreen = (props: any) => {
                           
             </Modal>
             
+            {
+            showAdvancedFilter &&    
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={showAdvancedFilter}
+                onRequestClose={() => { setShowAdvancedFilter(false)}}>
+
+                    <View style={styles.modalView}>
+                        <ProductFilter 
+                            categories = {categories}
+                            onCancel = {() => { setShowAdvancedFilter(false)}}
+                            onApply = {onApplyAdvFiter}    
+                        />
+                    </View>    
+
+            </Modal> 
+            }    
+
             <View style={styles.productList}>
                 {
                     showFilter && 
-                    <View>
+                    <Card>
                         <CustomTextInput 
                             onChangeText={handleFilter}
-                            placeholder='Filter products'
+                            placeholder='Search products ...'
                             value={filterText}
-                            style={{}}
+                            style={{borderBottomColor: 'gray'}}
                         />     
-                    </View>
+                    </Card>
                 }
                 <SwipeListView 
                     data={filteredProducts} 
@@ -230,6 +266,7 @@ ProductListScreen.navigationOptions = (navData: any) => {
 
     const productCount = navData.navigation.getParam('productCount');
     const toggleFilter = navData.navigation.getParam('toggleFilter');
+    const toggleAdvancedFilter = navData.navigation.getParam('toggleAdvancedFilter');
 
     //const title = `Products (${cartItemCount} in Cart)`;
     return ({
@@ -239,6 +276,12 @@ ProductListScreen.navigationOptions = (navData: any) => {
         },
         headerTintColor: Platform.OS === 'android'? 'white': Colors.primary,
         headerRight: () => <HeaderButtons HeaderButtonComponent={HeaderButton}>
+                                <Item 
+                                    title='filter' 
+                                    iconName={'ios-options'}
+                                    color={Colors.primary}
+                                    onPress={() => { toggleAdvancedFilter() }}
+                                />
                                 <Item 
                                     title='search' 
                                     iconName={'ios-search'}
@@ -287,7 +330,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         height: SCREEN_HEIGHT * 0.75,
-        width: '95%'
+        width: SCREEN_WIDTH - 10
     },
     scrollModal:{
 
