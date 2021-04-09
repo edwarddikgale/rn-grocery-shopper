@@ -19,7 +19,7 @@ const ProductUpdate = (props: any) => {
     const [priceText, setPriceText] = useState<string>(product.price? product.price.toString() : '0.00');
 
     const categories: ProductCategory[] = props.categories;
-    const categoryItems = categories.map((cat:ProductCategory) => { 
+    const categoryItems = categories.filter(cat => cat.title.length > 0).map((cat:ProductCategory) => { 
         return {
             label: cat.title, 
             value: cat.title,
@@ -49,6 +49,8 @@ const ProductUpdate = (props: any) => {
         setProduct({...product, category: category});
     }
 
+    const selectedCategory = categoryItems.find(item => item.value === product.category);
+
     return (
         <View style={styles.container}>
             
@@ -64,7 +66,7 @@ const ProductUpdate = (props: any) => {
                     <Text style={styles.textLabel}>Type: </Text>
                     <DropDownPicker
                         items={categoryItems}
-                        defaultValue={product.category}
+                        defaultValue={selectedCategory? product.category: ''}
                         containerStyle={{height: 40}}
                         style={{backgroundColor: '#fafafa'}}
                         itemStyle={{
