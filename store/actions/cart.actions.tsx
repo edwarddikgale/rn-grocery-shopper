@@ -87,7 +87,10 @@ export const addToCart = (uid: string, payload: Product): any => {
       return fbVerbFn
         .then((data:any) => {
             product.cartId = product.cartId || data.key;
-            dispatch(addToCartSuccess(product))
+            if(product.cartQuantity > 1)
+                dispatch(incrementCartItemSuccess(product.id));
+            else    
+                dispatch(addToCartSuccess(product))
         })
         .catch((err:any) => {
           dispatch(addToCartFail(err))  
@@ -101,7 +104,7 @@ export const incrementCartItem = (uid: string, payload: CardItem): any => {
 
       dispatch(addToCartStart()); 
 
-      const item = {...payload, quantity: payload.quantity + 1} as CardItem; 
+      const item = {...payload} as CardItem; 
       const product = {cartQuantity: payload.quantity + 1}; 
 
       const cartItemPath = `cart/${uid}/${item.id}`;
@@ -110,7 +113,6 @@ export const incrementCartItem = (uid: string, payload: CardItem): any => {
 
       return fbVerbFn
         .then((data:any) => {
-            console.log('Updated...' + JSON.stringify(payload));
             dispatch(incrementCartItemSuccess(item.productId))
         })
         .catch((err:any) => {

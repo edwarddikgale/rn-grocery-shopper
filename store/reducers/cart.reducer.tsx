@@ -64,8 +64,8 @@ export default (state: ICartState = initialState, action: any) => {
             return {
                 ...state,
                 items: {...cartItems},
-                totalAmount: productSum,
-                count: productCount
+                totalAmount: state.totalAmount + productSum,
+                count: state.count + productCount
             };   
 
         case actionTypes.REMOVE_CART_ITEM_SUCCESS:

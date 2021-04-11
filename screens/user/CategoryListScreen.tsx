@@ -78,6 +78,7 @@ const CategoryListScreen = (props: any) => {
             <TouchableWithoutFeedback onPress={() => onViewDetails(itemData.item)}>
                 <View style={styles.category}>
                     <Text style={styles.categoryText}>{itemData.item.title}</Text>
+                    <Text style={styles.productCount}>19</Text>
                 </View>
             </TouchableWithoutFeedback>
         )
@@ -234,6 +235,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         fontWeight: 'bold'
+    },
+    productCount:{
+        alignSelf: 'flex-end',
+        marginTop: -10,
+        marginRight: 10,
+        fontWeight: 'bold',
+        position: 'absolute'
     }      
 })
 
