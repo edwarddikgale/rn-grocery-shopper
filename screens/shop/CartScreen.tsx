@@ -3,7 +3,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Text, View, FlatList, Button, StyleSheet, Image, TouchableHighlight, Dimensions, TouchableWithoutFeedback, Animated} from 'react-native';
 import {IAppState} from '../../store/state/app.state';
 import {CardItem} from '../../models/cart-item';
-import {clearCart, removeCartItem, incrementCartItem, decrementCartItem, getCart} from '../../store/actions/cart.actions';
+import {clearCart, confirmCartItem, removeCartItem, incrementCartItem, decrementCartItem, getCart} from '../../store/actions/cart.actions';
 import * as ordersActions from '../../store/actions/orders.actions';
 import Colors from '../../constants/Colors';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -58,7 +58,9 @@ const CartScreen = (props:any) => {
     }
 
     const confirmItem =  (item: CardItem) => {
-        cartItems.filter(ci => ci.productId === item.productId)[0].confirm = !item.confirm 
+        if(userId){
+            dispatch(confirmCartItem(userId, item));
+        }
     }
 
     const incrementItem = (item: CardItem) => {
@@ -87,17 +89,17 @@ const CartScreen = (props:any) => {
 
     const renderItem = (itemData: any) =>{
         const item: CardItem = itemData.item;
+        const confirmedStyle = item.confirm? styles.cartItemConfirmed: styles.cartItemNotConfirmed;
         return (
             <View style={styles.cartItem}>
                 <View style={styles.cartItemContent}>
-                    <Text style={styles.itemTitle}>{item.title}</Text>
+                    <Text style={{...styles.itemTitle, ...confirmedStyle}}>{item.title}</Text>
                     <Text style={styles.itemTotal}>€{item.total.toFixed(2)}</Text>
                 </View>
                 <View style={styles.cartItemActions}> 
                     <TouchableWithoutFeedback onPress={()=> confirmItem(item)}>
                         <View style={styles.confirmItemAction}>
-                            {item.confirm}
-                            <Ionicons name='md-checkbox-outline' color={item.confirm? 'green': 'gray'} size={28} />
+                            <Ionicons name={item.confirm? 'ios-checkmark-circle' : 'ios-checkmark-circle-outline'} color={item.confirm? 'green': 'gray'} size={28} />
                         </View>
                     </TouchableWithoutFeedback>              
                     <TouchableWithoutFeedback onPress={()=> decrementItem(item)}>
@@ -244,6 +246,12 @@ const styles= StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         backgroundColor: 'white', 
+    },
+    cartItemConfirmed:{
+        color: 'green',
+        fontWeight: 'bold'
+    },
+    cartItemNotConfirmed:{
     },
     cartItemContent:{
         paddingTop: 10,

@@ -24,6 +24,11 @@ export const REMOVE_CART_ITEM_START = 'REMOVE_CART_ITEM_START';
 export const REMOVE_CART_ITEM_SUCCESS = 'REMOVE_CART_ITEM_SUCCESS';
 export const REMOVE_CART_ITEM_FAIL = 'REMOVE_CART_ITEM_FAIL';
 
+export const CONFIRM_CART_ITEM = 'CONFIRM_CART_ITEM';
+export const CONFIRM_CART_ITEM_START = 'CONFIRM_CART_ITEM_START';
+export const CONFIRM_CART_ITEM_SUCCESS = 'CONFIRM_CART_ITEM_SUCCESS';
+export const CONFIRM_CART_ITEM_FAIL = 'CONFIRM_CART_ITEM_FAIL';
+
 export const DECREMENT_CART_ITEM = 'DECREMENT_CART_ITEM';
 export const DECREMENT_CART_ITEM_START = 'DECREMENT_CART_ITEM_START';
 export const DECREMENT_CART_ITEM_SUCCESS = 'DECREMENT_CART_ITEM_SUCCESS';
@@ -94,6 +99,30 @@ export const addToCart = (uid: string, payload: Product): any => {
         })
         .catch((err:any) => {
           dispatch(addToCartFail(err))  
+        })
+    }
+}
+
+export const confirmCartItem = (uid: string, payload: CardItem): any => {
+
+    return (dispatch: any, getState: any, getFirebase: any) => {
+
+      dispatch(confirmCartItemStart()); 
+
+      //let now = new Date(new Date());
+      //payload.lastUpdated = now.getTime();
+      const cartItem = {...payload, confirm: payload.confirm? false: true}; 
+
+      const cartItemPath = `cart/${uid}/${payload.id}`;
+
+      return getFirebase()
+        .ref(cartItemPath)
+        .update(cartItem)
+        .then((data:any) => {
+            dispatch(confirmCartItemSuccess(cartItem))
+        })
+        .catch((err:any) => {
+          dispatch(confirmCartItemFail(err))  
         })
     }
 }
@@ -255,6 +284,26 @@ export const clearCartFail = (payload: string) => {
 export const clearCartStart = () => {
     return {
         type: CLEAR_CART_START
+    };
+}
+
+export const confirmCartItemSuccess = (payload: CardItem) => {
+    return {
+        type: CONFIRM_CART_ITEM_SUCCESS,
+        payload: payload
+    };
+}
+
+export const confirmCartItemFail = (payload: string) => {
+    return {
+        type: CONFIRM_CART_ITEM_FAIL,
+        payload: payload
+    };
+}
+
+export const confirmCartItemStart = () => {
+    return {
+        type: CONFIRM_CART_ITEM_START
     };
 }
 

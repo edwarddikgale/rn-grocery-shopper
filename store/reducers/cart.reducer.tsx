@@ -149,6 +149,15 @@ export default (state: ICartState = initialState, action: any) => {
                 count: products.length
             };
 
+        case actionTypes.CONFIRM_CART_ITEM_SUCCESS:
+
+            const cartItemId = action.payload.productId;
+            const currentCartItem: CardItem = { ...state.items[cartItemId], confirm: action.payload.confirm };       
+            return {
+                ...state,
+                items: {...state.items, [cartItemId]:currentCartItem }
+            };         
+
         case actionTypes.CLEAR_CART_SUCCESS:
             return initialState
     }
