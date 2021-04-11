@@ -13,6 +13,8 @@ import CategoryCarousel from '../common/CategoryCarousel';
 const CategoryListScreen = (props: any) => {
 
     const categories = useSelector((state: IAppState) => state.categories.categories);
+    const products = useSelector((state: IAppState) => state.products.userProducts);
+
     const [userId, setUserId] = useState<string>();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [category, setCategory] = useState<ProductCategory>({} as ProductCategory);
@@ -72,13 +74,18 @@ const CategoryListScreen = (props: any) => {
         setModalVisible(modalVisible => !modalVisible);
     }
 
+    const productCount = (category: string) : number => {
+        if(!category) return 0;
+        return products.filter(product => product.category && product.category.toLowerCase() === category.toLowerCase()).length;
+    }
+
     const renderItem = (itemData: {item: ProductCategory}) => {
         
         return (
             <TouchableWithoutFeedback onPress={() => onViewDetails(itemData.item)}>
                 <View style={styles.category}>
                     <Text style={styles.categoryText}>{itemData.item.title}</Text>
-                    <Text style={styles.productCount}>19</Text>
+                    <Text style={styles.productCount}>{productCount(itemData.item.title)}</Text>
                 </View>
             </TouchableWithoutFeedback>
         )

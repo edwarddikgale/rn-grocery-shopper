@@ -19,6 +19,7 @@ import HeaderButton from '../../components/ui/header-button';
 import {DrawerActions} from 'react-navigation-drawer';
 import Card from '../../components/ui/card';
 import ProductFilter from '../../components/common/product.filter';
+import AvailabilityLabel from '../../utils/availability.label';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -90,9 +91,20 @@ const ProductListScreen = (props: any) => {
 
         const products = [...sortedProducts];
         setFilteredProducts(products.filter(product => 
-            (product.category && product.category.toLowerCase().indexOf(filters.category.toLowerCase()) >= 0)
-            || filters.category.toLowerCase() === 'all'
-        ));        
+            (
+                (!filters.category || filters.category.toLowerCase() === 'all') 
+                || 
+                (filters.category && product.category && product.category.toLowerCase().indexOf(filters.category.toLowerCase()) >= 0)
+            )
+            && 
+            (
+                (!filters.availability || filters.availability.toLowerCase() === 'all') 
+                || 
+                (filters.availability && AvailabilityLabel.getLabel(product.stockPercentage).label.toLowerCase().indexOf(filters.availability.toLowerCase()) >= 0)
+            )
+        ));  
+        
+        setShowAdvancedFilter(false);
     }
 
     const onViewDetails = (product: Product) => {
@@ -118,6 +130,7 @@ const ProductListScreen = (props: any) => {
             product.title.toLowerCase().indexOf(filterText) >= 0
             || product.category?.toLowerCase().indexOf(filterText) >= 0
         ));
+
     }
 
     const toggleFilter = () => {

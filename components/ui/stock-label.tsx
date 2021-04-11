@@ -1,30 +1,31 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import AvailabilityLabel, {Low, VeryLow, Average, AlmostFull, Full, Finished} from '../../utils/availability.label';
 
 const TextSize = 10;
 const StockLabel = (props:{stockPercentage: number, style?:any}) => {
 
-    const getLabelAndStyle = (stockPerc: any) =>  {
-        let result = {style: styles.stockFinished, label: 'Finished'};
+    const getLabelAndStyle = (stockPerc: number) =>  {
+        let result = {style: styles.stockFinished, label: Finished};
+        let availability = AvailabilityLabel.getLabel(stockPerc);
 
-        if(!stockPerc || stockPerc == 0)
+        if(availability.label === Finished)
             return result;
         
-        if(stockPerc > 0 && stockPerc <= 25)
-            return {style: styles.stockVeryLow, label: 'Very Low'};   
+        if(availability.label === VeryLow)
+            return {style: styles.stockVeryLow, label: availability.label};   
 
-        if(stockPerc > 25 && stockPerc <= 50)
-            return {style: styles.stockLow, label: 'Low'}; 
+        if(availability.label === Low)
+            return {style: styles.stockLow, label: availability.label}; 
         
-        if(stockPerc > 50 && stockPerc <= 75)
-            return {style: styles.stockOk, label: 'Average'}; 
+        if(availability.label === Average)
+            return {style: styles.stockOk, label: availability.label}; 
 
-        if(stockPerc > 75 && stockPerc <= 99) 
-            return {style: styles.stockHealthy, label: 'Full...ish'}; 
+        if(availability.label === AlmostFull) 
+            return {style: styles.stockHealthy, label: availability.label}; 
 
-
-        if(stockPerc > 99)
-            return {style: styles.stockFull, label: 'Full'}; 
+        if(availability.label === Full)
+            return {style: styles.stockFull, label: availability.label}; 
 
         return result;
     }
