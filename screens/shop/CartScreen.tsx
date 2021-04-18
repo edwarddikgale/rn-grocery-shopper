@@ -89,10 +89,12 @@ const CartScreen = (props:any) => {
 
     const renderItem = (itemData: any) =>{
         const item: CardItem = itemData.item;
+        const index = itemData.index + 1;
         const confirmedStyle = item.confirm? styles.cartItemConfirmed: styles.cartItemNotConfirmed;
         return (
             <View style={styles.cartItem}>
                 <View style={styles.cartItemContent}>
+                    <Text style={styles.itemIndex}>{index}</Text>
                     <Text style={{...styles.itemTitle, ...confirmedStyle}}>{item.title}</Text>
                     <Text style={styles.itemTotal}>€{item.total.toFixed(2)}</Text>
                 </View>
@@ -194,7 +196,8 @@ const CartScreen = (props:any) => {
                         leftActivationValue={100}
                         rightActivationValue={-200}
                         leftActionValue={0}
-                        rightActionValue={-500} 
+                        rightActionValue={-500}
+                        style={{marginBottom: 40}} 
                     />          
                 </View>
             </View>
@@ -204,7 +207,8 @@ const CartScreen = (props:any) => {
 
 const styles= StyleSheet.create({
     screen:{
-        marginVertical: 20
+        marginVertical: 20,
+        flex: 1
     },
     summary:{
         flexDirection: 'row',
@@ -226,7 +230,7 @@ const styles= StyleSheet.create({
         fontSize: 14
     },
     cartItemsContainer:{
-        
+        flex: 1
     },
     cartItemCountSummary:{
         fontWeight: 'bold',
@@ -235,8 +239,8 @@ const styles= StyleSheet.create({
         marginHorizontal: 5,
     },
     cartItems:{
-        marginHorizontal: 5,
-        
+        marginTop: 5,
+        marginBottom: 5
     },
     cartItem:{
         alignItems: 'center',
@@ -272,6 +276,10 @@ const styles= StyleSheet.create({
     },
     itemTitle:{
         width: '70%'
+    },
+    itemIndex:{
+        width: 20,
+        fontWeight: 'bold'
     },
     itemQuantity:{
         width: '10%',
