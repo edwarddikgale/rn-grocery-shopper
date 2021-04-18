@@ -17,13 +17,13 @@ const AvailabilityLabel = {
         if(stockPerc > 0 && stockPerc <= 15)
             return {label: VeryLow};   
 
-        if(stockPerc > 15 && stockPerc <= 30)
+        if(stockPerc > 15 && stockPerc <= 35)
             return {label: Low}; 
         
-        if(stockPerc > 30 && stockPerc <= 75)
+        if(stockPerc > 35 && stockPerc <= 60)
             return {label: Average}; 
 
-        if(stockPerc > 75 && stockPerc <= 99) 
+        if(stockPerc > 60 && stockPerc <= 95) 
             return {label: AlmostFull}; 
 
 

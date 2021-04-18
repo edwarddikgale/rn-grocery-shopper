@@ -165,8 +165,8 @@ export const updateProduct = (uid: string, payload: Product): any => {
     return (dispatch: any, getState: any, getFirebase: any) => {
         
       dispatch(updateProductStart());
-      if(uid){
-
+      if(uid && payload.id){
+        
         const path = `stock/${uid}/products/${payload.id}`;
 
         let now = new Date(new Date());
