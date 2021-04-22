@@ -20,6 +20,7 @@ import {DrawerActions} from 'react-navigation-drawer';
 import Card from '../../components/ui/card';
 import ProductFilter from '../../components/common/product.filter';
 import AvailabilityLabel from '../../utils/availability.label';
+import ProductCategory from '../../models/productCategory';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -27,13 +28,18 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const ProductListScreen = (props: any) => {
 
     const {navigation} = props;
+
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [showAdvancedFilter, setShowAdvancedFilter] = useState<boolean>(false);
     const [filterText, setFilterText] = useState<string>('');
     const [userId, setUserId] = useState<string>();
-    const products = useSelector((state: IAppState) => state.products.userProducts);
     const [product, setProduct] = useState<Product>({price: 0.00} as Product);
+    
+    const [filterCategories, setFilterCategories] = useState<ProductCategory[]>([]);
+    const [filterAvailabilities, setFilterAvailabilities] = useState<string[]>([]);
+
+    const products = useSelector((state: IAppState) => state.products.userProducts);
     const categories = useSelector((state: IAppState) => state.categories.categories);
 
     const floatBtnActions: IActionProps[] | undefined = [];
@@ -87,20 +93,23 @@ const ProductListScreen = (props: any) => {
         }
     }
 
-    const onApplyAdvFiter = (filters: {availability: string, category: string}) => {
+    const onApplyAdvFiter = (filters: {availabilities: string[], categories: ProductCategory[]}) => {
 
         const products = [...sortedProducts];
+        setFilterAvailabilities(filters.availabilities);
+        setFilterCategories(filters.categories);
+
         setFilteredProducts(products.filter(product => 
             (
-                (!filters.category || filters.category.toLowerCase() === 'all') 
+                (!filters.categories || filters.categories.length === 1 && filters.categories[0].title.toLowerCase() === 'all') 
                 || 
-                (filters.category && product.category && product.category.toLowerCase().indexOf(filters.category.toLowerCase()) >= 0)
+                (filters.categories && product.category && filters.categories.filter(fcat => product.category.toLowerCase().indexOf(fcat.title.toLowerCase()) >= 0).length > 0)
             )
-            && 
+            &&
             (
-                (!filters.availability || filters.availability.toLowerCase() === 'all') 
+                (!filters.availabilities || filters.availabilities.length === 1 && filters.availabilities[0].toLowerCase() === 'all') 
                 || 
-                (filters.availability && AvailabilityLabel.getLabel(product.stockPercentage).label.toLowerCase().indexOf(filters.availability.toLowerCase()) >= 0)
+                (filters.availabilities && filters.availabilities.filter(aLabel => AvailabilityLabel.getLabel(product.stockPercentage).label === aLabel).length > 0)
             )
         ));  
         
@@ -229,6 +238,8 @@ const ProductListScreen = (props: any) => {
                     <View style={styles.modalView}>
                         <ProductFilter 
                             categories = {categories}
+                            filterCategories = {filterCategories}
+                            filterAvailabilities = {filterAvailabilities}
                             onCancel = {() => { setShowAdvancedFilter(false)}}
                             onApply = {onApplyAdvFiter}    
                         />
