@@ -43,7 +43,7 @@ const ProductFilter = (props: any) => {
     }
 
     const renderCategoryItem = (itemData: {item: ProductCategory}) => {
-        const on = filterCategories && filterCategories.includes(itemData.item);
+        const on = filterCategories && filterCategories.find(cat => cat.id === itemData.item.id) != null;
 
         return (
             <TouchableOpacity onPress={() => onToggleCatFilter(itemData.item)}>

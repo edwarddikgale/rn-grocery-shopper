@@ -101,13 +101,13 @@ const ProductListScreen = (props: any) => {
 
         setFilteredProducts(products.filter(product => 
             (
-                (!filters.categories || filters.categories.length === 1 && filters.categories[0].title.toLowerCase() === 'all') 
+                ((!filters.categories  || filters.categories.length == 0) || (filters.categories.length === 1 && filters.categories[0].title.toLowerCase() === 'all')) 
                 || 
                 (filters.categories && product.category && filters.categories.filter(fcat => product.category.toLowerCase().indexOf(fcat.title.toLowerCase()) >= 0).length > 0)
             )
             &&
             (
-                (!filters.availabilities || filters.availabilities.length === 1 && filters.availabilities[0].toLowerCase() === 'all') 
+                ((!filters.availabilities  || filters.availabilities.length == 0) || (filters.availabilities.length === 1 && filters.availabilities[0].toLowerCase() === 'all')) 
                 || 
                 (filters.availabilities && filters.availabilities.filter(aLabel => AvailabilityLabel.getLabel(product.stockPercentage).label === aLabel).length > 0)
             )
