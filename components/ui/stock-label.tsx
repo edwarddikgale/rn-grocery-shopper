@@ -31,73 +31,51 @@ const StockLabel = (props:{stockPercentage: number, style?:any}) => {
     }
 
     let labelAndStyle = getLabelAndStyle(props.stockPercentage);
-    labelAndStyle = {...labelAndStyle, style:{...labelAndStyle.style, ...props?.style}}
+    labelAndStyle = {...labelAndStyle, style:{...labelAndStyle.style,...styles.labelContainer, ...props?.style}}
 
     return (
-        <Text style={labelAndStyle.style}>{labelAndStyle.label}</Text>
+        <View style={labelAndStyle.style}>
+            <Text style={styles.labelText}>{labelAndStyle.label}</Text>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    labelText:{
+        fontSize: TextSize
+    },
+    labelContainer:{
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        textTransform: 'uppercase', 
+        borderRadius: 20,
+        fontSize: TextSize,
+        paddingLeft: 10,
+        paddingVertical: 1  
+    },
     stockFinished:{
         backgroundColor: 'red',
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',
-        borderRadius: 10,
-        fontSize: TextSize,
-        paddingLeft: 10   
+        color: 'white' 
     },
     stockVeryLow:{
         backgroundColor: 'pink',
-        color: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',
-        borderRadius: 10,
-        fontSize: TextSize,
-        paddingLeft: 10    
+        color: 'black'
     },
     stockLow:{
         backgroundColor: 'yellow',
-        color: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase', 
-        borderRadius: 10,
-        fontSize: TextSize,
-        paddingLeft: 10   
+        color: 'black' 
     },
     stockOk:{
         backgroundColor: 'orange',
-        color: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',
-        borderRadius: 10,
-        fontSize: TextSize,
-        paddingLeft: 10    
+        color: 'black'  
     },
     stockHealthy:{
         backgroundColor: 'blue',
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',
-        borderRadius: 10,
-        fontSize: TextSize,
-        paddingLeft: 10    
+        color: 'white'
     },
     stockFull:{
         backgroundColor: 'green',
-        color: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
-        textTransform: 'uppercase',
-        borderRadius: 10,
-        fontSize: TextSize,
-        paddingLeft: 10   
+        color: 'white'
     }
 });
 
