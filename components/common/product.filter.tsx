@@ -4,6 +4,7 @@ import Accordion from 'react-native-collapsible-accordion';
 import { AntDesign } from '@expo/vector-icons';
 import ProductCategory from '../../models/productCategory';
 import Colors from '../../constants/Colors';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -68,6 +69,11 @@ const ProductFilter = (props: any) => {
 
     return (
         <View style={styles.container}>
+            <View  style={styles.closeBtn}>
+                <TouchableOpacity onPress={props.onCancel}>
+                    <Ionicons name='ios-close-circle-outline' size={40} />
+                </TouchableOpacity>
+            </View>
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>{props.title || 'Filter Your Stock'}</Text>
             </View>
@@ -143,6 +149,14 @@ const styles = StyleSheet.create({
         height: SCREEN_HEIGHT * 0.75,
         marginTop: 10,
         paddingHorizontal: 10
+    },
+    closeBtn:{
+        alignSelf: 'flex-end',
+        marginTop: -20,
+        marginRight: 10,
+        paddingRight: 20,
+        fontWeight: 'bold',
+        position: 'absolute'
     },
     title:{
         fontWeight: 'bold',

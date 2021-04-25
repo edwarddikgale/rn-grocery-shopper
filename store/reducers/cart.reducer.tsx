@@ -30,7 +30,6 @@ export default (state: ICartState = initialState, action: any) => {
             }
         }
         else{
-            console.log('adding...');
             const newCartItem:CardItem = {
                 title: product.title,
                 price: product.price,

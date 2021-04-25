@@ -234,16 +234,28 @@ const ProductListScreen = (props: any) => {
                 transparent={true}
                 visible={showAdvancedFilter}
                 onRequestClose={() => { setShowAdvancedFilter(false)}}>
-
-                    <View style={styles.modalView}>
-                        <ProductFilter 
-                            categories = {categories}
-                            filterCategories = {filterCategories}
-                            filterAvailabilities = {filterAvailabilities}
-                            onCancel = {() => { setShowAdvancedFilter(false)}}
-                            onApply = {onApplyAdvFiter}    
-                        />
-                    </View>    
+                <TouchableOpacity 
+                    style={styles.centeredView} 
+                    activeOpacity={1} 
+                    onPressOut={() => {setModalVisible(false)}}
+                >
+                    <ScrollView 
+                        directionalLockEnabled={true} 
+                        contentContainerStyle={styles.scrollModal}
+                    >
+                        <TouchableWithoutFeedback>
+                            <View style={styles.modalView}>
+                                <ProductFilter 
+                                    categories = {categories}
+                                    filterCategories = {filterCategories}
+                                    filterAvailabilities = {filterAvailabilities}
+                                    onCancel = {() => { setShowAdvancedFilter(false)}}
+                                    onApply = {onApplyAdvFiter}    
+                                />
+                             </View> 
+                        </TouchableWithoutFeedback>
+                    </ScrollView>
+                </TouchableOpacity>   
 
             </Modal> 
             }    

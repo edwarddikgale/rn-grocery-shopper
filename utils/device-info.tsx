@@ -7,6 +7,16 @@ const DeviceInfo = {
         const aspectRatio = height/width;
 
         return aspectRatio <= 1.6;
+    },
+
+    screenWidth: () => {
+        const {width}  = Dimensions.get('window');
+        return width;
+    },
+
+    screenHeight: () => {
+        const {height}  = Dimensions.get('window');
+        return height;
     }
 } 
 
