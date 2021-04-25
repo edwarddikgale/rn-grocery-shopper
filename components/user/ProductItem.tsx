@@ -21,39 +21,38 @@ const ProductItem = (props: any) => {
     return( 
         <View style={{...styles.product, height: prodHeight}}>
             <View style={styles.touchable}>
-            <TouchableComponent 
-                useForground 
-                onPress={() => props.onViewDetails(props.item)}>
-                <View>
-                    {
-                        showImage && 
-                        <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
-                    }
-                    <View style={styles.textSummary}>
-                        <SummaryCircle 
-                            style={{marginTop: 5}}
-                            letters={props.item.title?.substring(0,1)}
-                        />
-                        <View style={styles.details}>
-                            <View style={styles.titleContainer}>
-                                <Text style={styles.title}>{props.item.title}</Text>
-                                <View style={styles.stockPercentage}>
-                                    <StockLabel
-                                        stockPercentage = {props.item.stockPercentage} 
-                                    />
+                <TouchableComponent 
+                    useForground 
+                    onPress={() => props.onViewDetails(props.item)}>
+                    <View>
+                        {
+                            showImage && 
+                            <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
+                        }
+                        <View style={styles.textSummary}>
+                            <SummaryCircle 
+                                style={{marginTop: 5}}
+                                letters={props.item.title?.substring(0,1)}
+                            />
+                            <View style={styles.details}>
+                                <View style={styles.titleContainer}>
+                                    <Text style={styles.title}>{props.item.title}</Text>
+                                    <View style={styles.stockPercentage}>
+                                        <StockLabel
+                                            stockPercentage = {props.item.stockPercentage} 
+                                        />
+                                    </View>
                                 </View>
+                                <Text style={styles.category}>{props.item.category}</Text>
+                                <Text style={styles.price}>
+                                    € {props.item.price? parseFloat(props.item.price).toFixed(2): ''}
+                                    ... {props.item.lastUpdated && timeAgo.format(props.item.lastUpdated)}
+                                </Text>
+                            
                             </View>
-                            <Text style={styles.category}>{props.item.category}</Text>
-                            <Text style={styles.price}>
-                                € {props.item.price? parseFloat(props.item.price).toFixed(2): ''}
-                                ... {props.item.lastUpdated && timeAgo.format(props.item.lastUpdated)}
-                            </Text>
-                           
                         </View>
-
                     </View>
-                </View>
-            </TouchableComponent>
+                </TouchableComponent>
             </View>
         </View>
     )

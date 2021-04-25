@@ -4,6 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Colors from '../../constants/Colors';
 import { CardItem } from '../../models/cart-item';
 import productCategoryReducer from '../../store/reducers/product.category.reducer';
+import DeviceInfo from '../../utils/device-info';
 import StockLabel from '../ui/stock-label';
 
 const ProductItem = (props: any) => {
@@ -18,46 +19,46 @@ const ProductItem = (props: any) => {
 
     return( 
         <View style={styles.product}>
+            <View style={styles.stockPercentage}>
+                <StockLabel
+                    stockPercentage = {props.item.stockPercentage}
+                    style={{padding: 5, fontSize: 10}} 
+                />
+            </View>
             <View style={styles.touchable}>
-            <TouchableComponent useForground onPress={props.onViewDetails}>
-                <View>
-                    {
-                        showImage &&                      
-                        <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
-                    }
-                    <View style={styles.details}>
-                        <View>
-                            <Text style={styles.title}>{props.item.title}</Text>
-                            <Text style={styles.price}>€ {itemPrice }</Text>
-                        </View>
-                        <View style={styles.stockPercentage}>
-                            <StockLabel
-                                stockPercentage = {props.item.stockPercentage}
-                                style={{padding: 5, fontSize: 10}} 
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.actions}>
-                        <TouchableWithoutFeedback onPress={props.onViewDetails}>
-                            <View style={styles.viewDetails}>
-                                <Ionicons name='ios-information-circle-outline' color={'green'} size={28} />
+                <TouchableComponent useForground onPress={props.onViewDetails}>
+                    <View>
+                        {
+                            showImage &&                      
+                            <Image style={styles.image} source={{uri: props.item.imageUrl}} /> 
+                        }
+                        <View style={styles.details}>
+                            <View>
+                                <Text style={styles.title}>{props.item.title}</Text>
+                                <Text style={styles.price}>€ {itemPrice }</Text>
                             </View>
-                        </TouchableWithoutFeedback>    
+                        </View>
+                        <View style={styles.actions}>
+                            <TouchableWithoutFeedback onPress={props.onViewDetails}>
+                                <View style={styles.viewDetails}>
+                                    <Ionicons name='ios-information-circle-outline' color={'green'} size={28} />
+                                </View>
+                            </TouchableWithoutFeedback>    
 
-                        <TouchableWithoutFeedback onPress={props.onAddToCart}>
-                            <View style={styles.addToCart}>
-                                <Text>{cartItem? cartItem.quantity + ' +': ''}</Text>
-                                <Ionicons name='ios-cart' color={Colors.primary} size={28} />
-                            </View>
-                        </TouchableWithoutFeedback>    
-                    </View>
-                    {
-                    cartItem &&    
-                    <View style={{backgroundColor: Colors.green, height: 3, marginTop: 5}}>
+                            <TouchableWithoutFeedback onPress={props.onAddToCart}>
+                                <View style={styles.addToCart}>
+                                    <Text>{cartItem? cartItem.quantity + ' +': ''}</Text>
+                                    <Ionicons name='ios-cart' color={Colors.primary} size={28} />
+                                </View>
+                            </TouchableWithoutFeedback>    
+                        </View>
+                        {
+                        cartItem &&    
+                        <View style={{backgroundColor: Colors.green, height: 3, marginTop: 5}}>
 
+                        </View>
+                        }
                     </View>
-                    }
-                </View>
             </TouchableComponent>
             </View>
         </View>
@@ -75,7 +76,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         height: 275,
         margin: 20,
-        padding: 5
+        padding: 5,
+        width: DeviceInfo.isIpad()? DeviceInfo.screenWidth()/2 - 40: DeviceInfo.screenWidth() - 40
     },
     touchable:{
         borderRadius: 10,
@@ -113,8 +115,13 @@ const styles = StyleSheet.create({
         fontFamily: 'open-sans',
         width: 95,
         borderRadius: 20,
-
-    },
+        alignSelf: 'flex-end',
+        marginTop: -1,
+        marginRight: 20,
+        fontWeight: 'bold',
+        position: 'absolute',
+        zIndex: 3000
+    }, 
     addToCart:{
         marginHorizontal: 15,
         marginTop: -5,

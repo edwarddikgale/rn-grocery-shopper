@@ -1,5 +1,5 @@
 import React, { ReactPropTypes, useState } from 'react';
-import {View, Text, StyleSheet, TextInput, Button} from 'react-native';
+import {View, Text, StyleSheet, TextInput, Button, Platform} from 'react-native';
 import Product from '../../models/product';
 import CustomTextInput from '../ui/custom-text-input';
 import CategoryCarousel from '../../screens/common/CategoryCarousel';
@@ -62,7 +62,7 @@ const ProductUpdate = (props: any) => {
             />
             
             <View style={styles.inputsContainer}>
-                <View style={styles.category}>
+                <View style={{...styles.category, ...(Platform.OS !== 'android' && {zIndex: 10})}}>
                     <Text style={styles.textLabel}>Type: </Text>
                     <DropDownPicker
                         items={categoryItems}
@@ -74,6 +74,8 @@ const ProductUpdate = (props: any) => {
                         }}
                         dropDownStyle={{backgroundColor: '#fafafa'}}
                         onChangeItem={item => handleCategoryChange(item.value)}
+                        dropDownMaxHeight={300}
+                        zIndex={3000}
                     />
                 </View>
                 <View>
