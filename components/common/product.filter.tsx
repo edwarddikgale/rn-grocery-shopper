@@ -68,6 +68,9 @@ const ProductFilter = (props: any) => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>{props.title || 'Filter Your Stock'}</Text>
+            </View>
             <Accordion
                 onChangeVisibility={(value: React.SetStateAction<boolean>) => { setShowCatFilter(value) }}
                 renderHeader={() => (
@@ -140,6 +143,18 @@ const styles = StyleSheet.create({
         height: SCREEN_HEIGHT * 0.75,
         marginTop: 10,
         paddingHorizontal: 10
+    },
+    title:{
+        fontWeight: 'bold',
+        letterSpacing: 3,
+        fontSize: 14,
+        textTransform: 'uppercase',
+        padding: 5
+    },
+    titleContainer:{
+        marginVertical: 10,
+        borderBottomColor: 'gray',
+        borderBottomWidth: 1
     },
     selectedSmall:{
         fontSize: 10,
