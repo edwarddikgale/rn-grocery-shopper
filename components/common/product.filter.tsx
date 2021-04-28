@@ -22,7 +22,8 @@ const ProductFilter = (props: any) => {
 
     const [categories, setCategories] = useState<ProductCategory[]> ([{id:'0', title: 'All'}].concat(props.categories || []));
 
-    const [availabilities, setAvailabilities] = useState<{id:number, title: string}[]>([{id:-1, title: 'All'}, {id: 0, title: 'Finished'}, {id: 1, title: 'Very Low'}, {id: 2, title: 'Low'}, {id: 3, title: 'Average'},{id: 4, title: 'Full...ish'}, {id: 1, title: 'Full'}]);
+    const [availabilities, setAvailabilities] = useState<{id:number, title: string}[]>([
+        {id: 0, title: 'Finished'}, {id: 1, title: 'Very Low'}, {id: 2, title: 'Low'}, {id: 3, title: 'Average'},{id: 4, title: 'Full...ish'}, {id: 1, title: 'Full'}, {id:-1, title: 'All'}]);
 
     const onToggleCatFilter = (cat: ProductCategory) => { 
 

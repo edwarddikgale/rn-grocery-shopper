@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import AvailabilityLabel, {Low, VeryLow, Average, AlmostFull, Full, Finished} from '../../utils/availability.label';
 
-const TextSize = 10;
+const TextSize = 8;
 const StockLabel = (props:{stockPercentage: number, style?:any}) => {
 
     const getLabelAndStyle = (stockPerc: number) =>  {
@@ -35,14 +35,15 @@ const StockLabel = (props:{stockPercentage: number, style?:any}) => {
 
     return (
         <View style={labelAndStyle.style}>
-            <Text style={styles.labelText}>{labelAndStyle.label}</Text>
+            <Text style={{...labelAndStyle.style, ...styles.labelText}}>{labelAndStyle.label}</Text>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     labelText:{
-        fontSize: TextSize
+        fontSize: TextSize,
+        fontWeight: 'bold',
     },
     labelContainer:{
         justifyContent: 'flex-start',
