@@ -7,13 +7,19 @@ import Colors from '../../constants/Colors';
 const SplashScreen = (props: any) => {
 
     const [animation, setAnimation] = useState<any>();
-    const [nextScreen, setNextScreen] = useState<string>();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [nextScreen, setNextScreen] = useState<string>('SignUp');
     const [progress, setProgress] = useState<any>(new Animated.Value(0));
 
     useEffect(() => {
-      firebase.auth().onAuthStateChanged(user => {
-          setNextScreen(user? 'App': 'SignUp')
-      });
+      /*firebase.auth().onAuthStateChanged(user => {
+          setNextScreen(user? 'App': 'SignUp');
+          setLoading(false);
+      });*/
+
+      const user = firebase.auth().currentUser;
+      setNextScreen(user? 'App': 'SignUp');
+      setLoading(false);
     });
 
     if(animation){
@@ -33,7 +39,7 @@ const SplashScreen = (props: any) => {
                 onAnimationFinish = {() => props.navigation.navigate(nextScreen)}
                 duration = {3000}
                 autoPlay={true} 
-                loop={false}
+                loop={loading}
                 // OR find more Lottie files @ https://lottiefiles.com/featured
                 // Just click the one you like, place that file in the 'assets' folder to the left, and replace the above 'require' statement
                 />

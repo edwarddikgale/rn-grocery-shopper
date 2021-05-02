@@ -6061,6 +6061,21 @@
   dependencies:
     "fbjs" "^1.0.0"
 
+"react-native-root-siblings@^2.0.0":
+  "integrity" "sha1-V7svewpTmcSOFLNtXzrnAVzT+5U="
+  "resolved" "https://registry.npmjs.org/react-native-root-siblings/-/react-native-root-siblings-2.2.0.tgz"
+  "version" "2.2.0"
+  dependencies:
+    "static-container" "^1.0.0"
+
+"react-native-root-toast@^2.0.0":
+  "integrity" "sha1-sLLO+r87BewERSm914kHNTDJgu4="
+  "resolved" "https://registry.npmjs.org/react-native-root-toast/-/react-native-root-toast-2.0.0.tgz"
+  "version" "2.0.0"
+  dependencies:
+    "prop-types" "^15.5.10"
+    "react-native-root-siblings" "^2.0.0"
+
 "react-native-safe-area-context@~3.0.7":
   "integrity" "sha512-dqhRTlIFe5+P1yxitj0C9XVUxLqOmjomeqzUSSY8sNOWVjtIhEY/fl4ZKYpAVnktd8dt3zl13XmJTmRmy3d0uA=="
   "resolved" "https://registry.npmjs.org/react-native-safe-area-context/-/react-native-safe-area-context-3.0.7.tgz"
@@ -6789,6 +6804,11 @@
   "version" "0.1.10"
   dependencies:
     "type-fest" "^0.7.1"
+
+"static-container@^1.0.0":
+  "integrity" "sha512-rsUMpoUZ4sHsFyy+Wp9Kqnv3HU+LD5ShPRd+ocg8US9juKckq+7VgDEK+ZbG8sQ1EOaw2LBpF8XLwpozqGHGBQ=="
+  "resolved" "https://registry.npmjs.org/static-container/-/static-container-1.7.1.tgz"
+  "version" "1.7.1"
 
 "static-extend@^0.1.1":
   "integrity" "sha1-YICcOcv/VTNyJv1eC1IPNB8ftcY="

@@ -10,6 +10,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import LocalCache from '../../utils/local.cache';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import HiddenItemWithActions from '../common/HiddenItemWithActions';
+import Toaster from '../../utils/toaster';
 
 const CartScreen = (props:any) => {
 
@@ -54,6 +55,7 @@ const CartScreen = (props:any) => {
 
         if(userId){
             dispatch(removeCartItem(userId, item));
+            Toaster.toast(item.title + ' removed from cart.');
         }
     }
 
@@ -77,6 +79,7 @@ const CartScreen = (props:any) => {
         if(userId){
             dispatch(ordersActions.addOrder(userId, {cartItems, totalAmount}));
             dispatch(clearCart(userId));
+            Toaster.toast('Items in cart ordered and stock updated!');
         }
             
     }
@@ -84,6 +87,7 @@ const CartScreen = (props:any) => {
     const clearThisCart = () => {
         if(userId){
             dispatch(clearCart(userId));
+            Toaster.toast('All items have been removed from cart');
         }
     }
 

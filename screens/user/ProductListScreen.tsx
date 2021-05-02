@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, StyleSheet, FlatList, Modal, TouchableHighlight, TouchableOpacity, Dimensions, ScrollView, TouchableWithoutFeedback, Animated, Platform} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Modal, TouchableHighlight, TouchableOpacity, Dimensions, ScrollView, TouchableWithoutFeedback, Animated, Platform, YellowBox} from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useDispatch, useSelector } from 'react-redux';
 import ProductItem from '../../components/user/ProductItem';
@@ -21,6 +21,7 @@ import Card from '../../components/ui/card';
 import ProductFilter from '../../components/common/product.filter';
 import AvailabilityLabel from '../../utils/availability.label';
 import ProductCategory from '../../models/productCategory';
+import Toaster from '../../utils/toaster';
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -56,6 +57,10 @@ const ProductListScreen = (props: any) => {
     });
 
     useEffect(() => {
+        YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
+    }, []);
+
+    useEffect(() => {
         if(userId) dispatch(actions.getProducts(userId, {}));
         if(userId && (!categories || categories.length == 0))
             dispatch(categoryActions.getProductCategories(userId, {}));
@@ -79,7 +84,8 @@ const ProductListScreen = (props: any) => {
     }
 
     const onAddProdHandler = (product: Product) => {
-        if(userId){        
+        if(userId){       
+            Toaster.toast(product.title + ' Added'); 
             dispatch(actions.addProduct(userId, product));
             setModalVisible(false);
         }
@@ -88,10 +94,12 @@ const ProductListScreen = (props: any) => {
     const onUpdateProdHandler = (product: Product) => {
 
         if(userId && product.id){
+            Toaster.toast(product.title + ' Updated');  
             dispatch(actions.updateProduct(userId, product));
-            setModalVisible(false);            
+            setModalVisible(false);          
         }
     }
+
 
     const onApplyAdvFiter = (filters: {availabilities: string[], categories: ProductCategory[]}) => {
 
@@ -237,7 +245,7 @@ const ProductListScreen = (props: any) => {
                 <TouchableOpacity 
                     style={styles.centeredView} 
                     activeOpacity={1} 
-                    onPressOut={() => {setModalVisible(false)}}
+                    onPressOut={() => { setModalVisible(false)}}
                 >
                     <ScrollView 
                         directionalLockEnabled={true} 

@@ -18,6 +18,7 @@ import ProductCategory from '../../models/productCategory';
 import Product from '../../models/product';
 import AvailabilityLabel from '../../utils/availability.label';
 import Colors from '../../constants/Colors';
+import Toaster from '../../utils/toaster';
 
 const ProductsOverviewScreen = (props:any) =>{
     const {navigation} = props;
@@ -147,7 +148,10 @@ const ProductsOverviewScreen = (props:any) =>{
                                 productTitle: itemData.item.title
                             })}
                         }
-                        onAddToCart={()=> dispatch(cartActions.addToCart(user.uid, itemData.item))}                
+                        onAddToCart={()=> {
+                            dispatch(cartActions.addToCart(user.uid, itemData.item));
+                            Toaster.toast(itemData.item.title + ' added to cart');
+                        }}                
                     />
                 }
                 numColumns={DeviceInfo.isIpad()? 2: 1} 
