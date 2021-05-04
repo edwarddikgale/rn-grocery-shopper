@@ -15,17 +15,19 @@ import "firebase/firestore";
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import * as GoogleSignIn from 'expo-google-sign-in';
+import AppLogo from "../../components/user/AppLogo";
 
 const SignInScreen = (props: any) => {
 
     const [state, setState] = useState({ email: '', password: '', errorMessage: '', loading: false } as any);
 
     const onLoginSuccess = () => {
+        setState({...state, error: '', loading: false});
         props.navigation.navigate('Landing');
     }
 
     const onLoginFailure = (errorMessage: string) => {
-        setState({ error: errorMessage, loading: false });
+        setState({...state, error: errorMessage, loading: false});
     }
 
     const renderLoading = () => {
@@ -39,7 +41,7 @@ const SignInScreen = (props: any) => {
     }
 
     const signInWithEmail = async() => {
-        setState({ error: '', loading: false });
+        setState({...state, error: '', loading: true});
 
         return await firebase
         .auth()
@@ -67,7 +69,7 @@ const SignInScreen = (props: any) => {
                 await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
                 const credential = firebase.auth.FacebookAuthProvider.credential(result.token);
                 const facebookProfileData = await firebase.auth().signInWithCredential(credential);
-                onLoginSuccess()
+                onLoginSuccess();
             }
         } 
         catch ({ message }) {
@@ -99,13 +101,11 @@ const SignInScreen = (props: any) => {
         >
         <SafeAreaView style={{ flex: 1 }}>
             <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <Text style={{ fontSize: 24, marginTop: 20, fontWeight: "700", color: "gray", letterSpacing: 10 }}>
-                Re-stock 
-            </Text>
+            <AppLogo />
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
+                    placeholder="E m a i l"
                     placeholderTextColor="#B1B1B1"
                     returnKeyType="next"
                     keyboardType="email-address"
@@ -115,7 +115,7 @@ const SignInScreen = (props: any) => {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
+                    placeholder="P a s s w o r d"
                     placeholderTextColor="#B1B1B1"
                     returnKeyType="done"
                     textContentType="newPassword"
@@ -127,67 +127,74 @@ const SignInScreen = (props: any) => {
             {renderLoading()}
             <Text
                 style={{
-                    fontSize: 18,
+                    fontSize: 14,
                     textAlign: "center",
                     color: "red",
-                    width: "80%"
+                    width: "80%",
+                    padding: 10
                 }}
             >
                 {state.error}
             </Text>
-            <TouchableOpacity
-                style={{ width: '86%', marginTop: 10 }}
-                onPress={() => signInWithEmail()}>
-                    <View style={styles.standardButton}>
+            {
+                !state.loading 
+                &&   
+                <View style={{width: '86%'}}>
+                    <TouchableOpacity
+                        style={{marginTop: 10 }}
+                        onPress={() => signInWithEmail()}>
+                            <View style={styles.standardButton}>
+                                <Text
+                                    style={{
+                                        letterSpacing: 0.5,
+                                        fontSize: 16,
+                                        fontWeight:'bold'
+                                        }}
+                                >Sign In</Text>
+                            </View>                
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={{marginTop: 10 }}
+                        onPress={() => signInWithFacebook()}>
+                        <View style={styles.button}>
                         <Text
                             style={{
-                                letterSpacing: 0.5,
-                                fontSize: 16,
-                                fontWeight:'bold'
-                                }}
-                        >Sign In</Text>
+                            letterSpacing: 0.5,
+                            fontSize: 16,
+                            color: "#FFFFFF"
+                            }}
+                        >
+                            Continue with Facebook
+                        </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={{marginTop: 10 }}
+                        onPress={() => signInWithGoogle()}>
+                        <View style={styles.googleButton}>
+                        <Text
+                            style={{
+                            letterSpacing: 0.5,
+                            fontSize: 16,
+                            color: "#707070"
+                            }}
+                        >
+                            Continue with Google
+                        </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <View style={{ marginTop: 10 }}>
+                        <Text
+                        style={{ fontWeight: "200", fontSize: 17, textAlign: "center" }}
+                        onPress={() => {
+                            props.navigation.navigate("SignUp");
+                        }}
+                        >
+                        Don't have an Account?
+                        </Text>
                     </View>                
-            </TouchableOpacity>
-            <TouchableOpacity 
-                style={{ width: "86%", marginTop: 10 }}
-                onPress={() => signInWithFacebook()}>
-                <View style={styles.button}>
-                <Text
-                    style={{
-                    letterSpacing: 0.5,
-                    fontSize: 16,
-                    color: "#FFFFFF"
-                    }}
-                >
-                    Continue with Facebook
-                </Text>
                 </View>
-            </TouchableOpacity>
-            <TouchableOpacity 
-                style={{ width: "86%", marginTop: 10 }}
-                onPress={() => signInWithGoogle()}>
-                <View style={styles.googleButton}>
-                <Text
-                    style={{
-                    letterSpacing: 0.5,
-                    fontSize: 16,
-                    color: "#707070"
-                    }}
-                >
-                    Continue with Google
-                </Text>
-                </View>
-            </TouchableOpacity>
-            <View style={{ marginTop: 10 }}>
-                <Text
-                style={{ fontWeight: "200", fontSize: 17, textAlign: "center" }}
-                onPress={() => {
-                    props.navigation.navigate("SignUp");
-                }}
-                >
-                Don't have an Account?
-                </Text>
-            </View>
+            }
             </KeyboardAvoidingView>
         </SafeAreaView>
         </TouchableWithoutFeedback>
@@ -209,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   input: {
-    fontSize: 18,
+    fontSize: 14,
     borderColor: "#707070",
     borderBottomWidth: 1,
     paddingBottom: 1.5,
@@ -244,10 +251,10 @@ const styles = StyleSheet.create({
 });
 
 SignInScreen.navigationOptions = (navData: any) => {
-
+    /*
     return ({
         headerTitle: `Sign In`,                   
-    })
+    })*/
         
 };  
 

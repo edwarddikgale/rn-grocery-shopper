@@ -84,7 +84,7 @@ const ProductListScreen = (props: any) => {
     }
 
     const onAddProdHandler = (product: Product) => {
-        if(userId){       
+        if(userId && product && product.title && product.title.length > 0){       
             Toaster.toast(product.title + ' Added'); 
             dispatch(actions.addProduct(userId, product));
             setModalVisible(false);

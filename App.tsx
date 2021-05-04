@@ -30,7 +30,9 @@ const rrfProps = {
 const fetchFonts = () => {
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-    'open-sans-bold': require('./assets/fonts/OpenSans-Regular.ttf')
+    'open-sans-bold': require('./assets/fonts/OpenSans-Regular.ttf'),
+    'krona-one': require('./assets/fonts/KronaOne-Regular.ttf')
+
   })
 }
 
@@ -45,7 +47,10 @@ export default function App() {
   return (
     <Provider store={store} >
       <ReactReduxFirebaseProvider {...rrfProps}>
-        <AuthNavigator />
+        {
+          fontsLoaded && 
+          <AuthNavigator />
+        }
       </ReactReduxFirebaseProvider>
     </Provider>
   );

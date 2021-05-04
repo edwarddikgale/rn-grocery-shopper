@@ -15,6 +15,8 @@ import 'firebase/firestore';
 import firebase from 'firebase';
 import * as Facebook from 'expo-facebook';
 import * as GoogleSignIn from 'expo-google-sign-in';
+import Colors from '../../constants/Colors';
+import AppLogo from '../../components/user/AppLogo';
 
 const SignUpScreen = (props: any) => {
 
@@ -91,7 +93,7 @@ const SignUpScreen = (props: any) => {
             onLoginSuccess();
         }
         } catch ({ message }) {
-        alert('login: Error:' + message);
+            alert('login: Error:' + message);
         }
     }
 
@@ -103,14 +105,12 @@ const SignUpScreen = (props: any) => {
         >
         <SafeAreaView style={{ flex: 1 }}>
             <KeyboardAvoidingView style={styles.container} behavior="padding">
-            <Text style={{ fontSize: 24, marginTop: 20, fontWeight: '700', color: 'gray' }}>
-                Restock.home
-            </Text>
+            <AppLogo />
             <View style={styles.form}>
                 <TextInput
                     style={styles.input}
-                    placeholder="Name"
-                    placeholderTextColor="#B1B1B1"
+                    placeholder="N a m e"
+                    placeholderTextColor={Colors.lightGray}
                     returnKeyType="next"
                     textContentType="name"
                     value={state.displayName}
@@ -118,8 +118,8 @@ const SignUpScreen = (props: any) => {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Email"
-                    placeholderTextColor="#B1B1B1"
+                    placeholder="E m a i l"
+                    placeholderTextColor={Colors.lightGray}
                     returnKeyType="next"
                     keyboardType="email-address"
                     textContentType="emailAddress"
@@ -128,8 +128,8 @@ const SignUpScreen = (props: any) => {
                 />
                 <TextInput
                     style={styles.input}
-                    placeholder="Password"
-                    placeholderTextColor="#B1B1B1"
+                    placeholder="P a s s w o r d"
+                    placeholderTextColor={Colors.lightGray}
                     returnKeyType="done"
                     textContentType="newPassword"
                     secureTextEntry={true}
@@ -216,11 +216,11 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   input: {
-    fontSize: 18,
-    borderColor: '#707070',
+    fontSize: 14,
+    borderColor: Colors.lightGray,
     borderBottomWidth: 1,
     paddingBottom: 1.5,
-    marginTop: 25.5
+    marginTop: 25
   },
   button: {
     backgroundColor: '#3A559F',

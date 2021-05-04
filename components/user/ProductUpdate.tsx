@@ -8,6 +8,7 @@ import Colors from '../../constants/Colors';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ProductCategory from '../../models/productCategory';
+import StockLabel from '../ui/stock-label';
 
 interface IProps{
    // onAdd: PropTypes.
@@ -117,7 +118,10 @@ const ProductUpdate = (props: any) => {
                     />     
                 </View>
                 <View style={styles.value}>
-                    <Text style={styles.textLabel}>Remaining:</Text>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.textLabel}>Remaining:</Text>
+                        <StockLabel stockPercentage={product.stockPercentage} style={{fontSize: 10, width: 160}} />
+                    </View>
                     <Slider
                         style={styles.valueSlider}
                         minimumValue={0}
