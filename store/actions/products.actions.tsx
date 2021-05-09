@@ -23,6 +23,8 @@ export const UPDATE_PRODUCT_START = 'UPDATE_PRODUCT_START';
 export const UPDATE_PRODUCT_FAIL = 'UPDATE_PRODUCT_FAIL';
 export const UPDATE_PRODUCT_SUCCESS = 'UPDATE_PRODUCT_SUCCESS';
 
+export const REFRESH_STOCK = 'REFRESH_STOCK';
+
 export const UserNotAuthError = 'User not authorised';
 
 export const addProductStart = (): {type: string, payload: boolean} => {
@@ -187,7 +189,7 @@ export const updateProduct = (uid: string, payload: Product): any => {
     }
 }
 
-export const getProducts = (uid:string, payload: any): any => {
+export const getProducts = (uid:string, payload?: any): any => {
 
     return (dispatch:any, getState: any, getFirebase: any) => {
 
@@ -215,4 +217,11 @@ export const getProducts = (uid:string, payload: any): any => {
             dispatch(getProductsFail(UserNotAuthError));    
     }
 
+}
+
+export const refreshStock = (uid:string, payload?: any): any => {
+
+    return (dispatch:any, getState: any, getFirebase: any) => {
+        dispatch(getProducts(uid, payload));
+    }
 }

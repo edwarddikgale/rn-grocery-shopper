@@ -22,8 +22,14 @@ const SignInScreen = (props: any) => {
     const [state, setState] = useState({ email: '', password: '', errorMessage: '', loading: false } as any);
 
     const onLoginSuccess = () => {
-        setState({...state, error: '', loading: false});
-        props.navigation.navigate('Landing');
+
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(_ => {
+        }).finally(() => {
+            //navigate to further pages no matter what happens
+            setState({...state, error: '', loading: false});
+            props.navigation.navigate('Landing');
+        });
+
     }
 
     const onLoginFailure = (errorMessage: string) => {
@@ -89,7 +95,7 @@ const SignInScreen = (props: any) => {
             onLoginSuccess();
         }
         } catch ({ message }) {
-        alert('login: Error:' + message);
+            alert('login: Error:' + message);
         }
     }
 

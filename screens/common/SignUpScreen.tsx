@@ -22,6 +22,12 @@ const SignUpScreen = (props: any) => {
 
     const[state, setState] = useState({ displayName: '', email: '', password: '', errorMessage: '', loading: false } as any);
 
+    if(firebase.auth().currentUser){
+        //user is already authenticated so just proceed
+        setState({...state, error: '', loading: false});
+        props.navigation.navigate('Landing');        
+    }
+    
     const onLoginSuccess = () => {
         props.navigation.navigate('Landing');
     }

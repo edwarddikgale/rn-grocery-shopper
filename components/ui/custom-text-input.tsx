@@ -8,7 +8,7 @@ const CustomTextInput = (props: any) => {
                 <TextInput
                     style={{...styles.textInput, ...props.style}}
                     placeholder={props.placeholder}
-                    maxLength={props.maxLength || 20}
+                    maxLength={props.maxLength || 50}
                     onChangeText={props.onChangeText}
                     value={props.value}
                     keyboardType={props.keyboardType || 'default'}

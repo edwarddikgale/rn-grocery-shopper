@@ -120,7 +120,7 @@ const ProductUpdate = (props: any) => {
                 <View style={styles.value}>
                     <View style={styles.inputGroup}>
                         <Text style={styles.textLabel}>Remaining:</Text>
-                        <StockLabel stockPercentage={product.stockPercentage} style={{fontSize: 10, width: 160}} />
+                        <StockLabel stockPercentage={product.stockPercentage} style={{fontSize: 10, width: 160, marginRight: 0}} />
                     </View>
                     <Slider
                         style={styles.valueSlider}

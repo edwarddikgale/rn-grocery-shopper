@@ -31,6 +31,7 @@ const ProductListScreen = (props: any) => {
     const {navigation} = props;
 
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [refreshing, setRefreshing] = useState<boolean>(false);
     const [showFilter, setShowFilter] = useState<boolean>(false);
     const [showAdvancedFilter, setShowAdvancedFilter] = useState<boolean>(false);
     const [filterText, setFilterText] = useState<string>('');
@@ -97,6 +98,14 @@ const ProductListScreen = (props: any) => {
             Toaster.toast(product.title + ' Updated');  
             dispatch(actions.updateProduct(userId, product));
             setModalVisible(false);          
+        }
+    }
+
+    const refreshData = () => {
+        if(userId){
+            setRefreshing(true);
+            dispatch(actions.refreshStock(userId));       
+            setTimeout(setRefreshing(false), 10000);
         }
     }
 
@@ -293,6 +302,8 @@ const ProductListScreen = (props: any) => {
                     rightActivationValue={-200}
                     leftActionValue={0}
                     rightActionValue={-500} 
+                    onRefresh={refreshData}
+                    refreshing={refreshing}
                 />
             </View>
 
@@ -351,7 +362,7 @@ ProductListScreen.navigationOptions = (navData: any) => {
 
 const styles = StyleSheet.create({
     screen:{
-        marginTop: 10,
+        marginTop: 5,
         width: '100%',
         flexDirection: 'column',
         flex: 1
@@ -360,10 +371,10 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     modalView: {
-        margin: 5,
+        marginHorizontal: 5,
         backgroundColor: "#fce6ff",
         borderRadius: 20,
-        padding: 35,
+        padding: 15,
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
@@ -374,7 +385,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         height: SCREEN_HEIGHT * 0.75,
-        width: SCREEN_WIDTH - 10
+        width: SCREEN_WIDTH - 20
     },
     scrollModal:{
 

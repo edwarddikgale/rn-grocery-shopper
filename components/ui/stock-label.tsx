@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     labelText:{
         fontSize: TextSize,
         fontWeight: 'bold',
+        paddingLeft: 10
     },
     labelContainer:{
         justifyContent: 'flex-start',
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
         textTransform: 'uppercase', 
         borderRadius: 20,
         fontSize: TextSize,
-        paddingLeft: 10,
         paddingVertical: 1  
     },
     stockFinished:{
