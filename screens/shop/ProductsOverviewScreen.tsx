@@ -19,6 +19,7 @@ import Product from '../../models/product';
 import AvailabilityLabel from '../../utils/availability.label';
 import Colors from '../../constants/Colors';
 import Toaster from '../../utils/toaster';
+import ProductUpdate from '../../components/user/ProductUpdate';
 
 const ProductsOverviewScreen = (props:any) =>{
     const {navigation} = props;
@@ -65,12 +66,15 @@ const ProductsOverviewScreen = (props:any) =>{
         return items && items.length > 0 ? items[0]: undefined as unknown as CardItem;
     }
 
-    
     sortedProducts.forEach(prod => {
         const prodCartItem = productCartItem(prod.id);
         if(prodCartItem){
             prod.cartQuantity = prodCartItem.quantity;
             prod.cartId = prodCartItem.id;
+        }
+        else{
+            prod.cartQuantity = 0;
+            prod.cartId = '';
         }
     });
 

@@ -10,7 +10,10 @@ export default interface Product{
     lastUpdated: number;
     lastOrderQuantity: number;
     cartQuantity: number;
-    cartId:string;
+    cartId?:string;
+    estLiveDays: number,
+    estExpiryDays: number,
+    isEssential: boolean
 }
 
 

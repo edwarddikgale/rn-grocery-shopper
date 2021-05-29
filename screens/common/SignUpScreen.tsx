@@ -22,12 +22,24 @@ const SignUpScreen = (props: any) => {
 
     const[state, setState] = useState({ displayName: '', email: '', password: '', errorMessage: '', loading: false } as any);
 
-    if(firebase.auth().currentUser){
+    /*if(firebase.auth().currentUser){
         //user is already authenticated so just proceed
         setState({...state, error: '', loading: false});
         props.navigation.navigate('Landing');        
-    }
-    
+    }*/
+
+    firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+            console.log('user logged in as ' + user.displayName + '' + user.uid);
+            setState({...state, error: '', loading: false});
+            props.navigation.navigate('Landing');  
+        }
+        else{
+            console.log('User not logged in');
+            setState({...state, error: '', loading: false});
+        }
+     });
+
     const onLoginSuccess = () => {
         props.navigation.navigate('Landing');
     }
@@ -45,6 +57,7 @@ const SignUpScreen = (props: any) => {
     }
 
     const signInWithEmail = async() => {
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         await firebase
         .auth()
         .createUserWithEmailAndPassword(state.email, state.password)

@@ -79,7 +79,7 @@ const CartScreen = (props:any) => {
         if(userId){
             dispatch(ordersActions.addOrder(userId, {cartItems, totalAmount}));
             dispatch(clearCart(userId));
-            Toaster.toast('Items in cart ordered and stock updated!');
+            Toaster.toast('Items in cart ordered & stock updated!');
         }
             
     }
@@ -153,6 +153,7 @@ const CartScreen = (props:any) => {
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
                 onClose={() => closeRow(rowMap, itemData.item.productId)}
                 onDelete={() => deleteRow(rowMap, itemData.item.id)}
+                style={styles.cartItemHiddenActions}
             />
         );    
     };
@@ -202,6 +203,7 @@ const CartScreen = (props:any) => {
                         leftActionValue={0}
                         rightActionValue={-500}
                         style={{marginBottom: 40}} 
+                        
                     />          
                 </View>
             </View>
@@ -254,6 +256,7 @@ const styles= StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         backgroundColor: 'white', 
+        margin: 2
     },
     cartItemConfirmed:{
         color: 'green',

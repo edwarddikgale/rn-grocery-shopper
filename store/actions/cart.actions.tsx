@@ -92,10 +92,12 @@ export const addToCart = (uid: string, payload: Product): any => {
       return fbVerbFn
         .then((data:any) => {
             product.cartId = product.cartId || data.key;
-            if(product.cartQuantity > 1)
+            if(product.cartQuantity > 1){
                 dispatch(incrementCartItemSuccess(product.id));
-            else    
+            }
+            else{
                 dispatch(addToCartSuccess(product))
+            }
         })
         .catch((err:any) => {
           dispatch(addToCartFail(err))  

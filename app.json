@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "grocery-shopping",
-    "slug": "grocery-shopping",
+    "name": "smart-re-stock",
+    "slug": "smart-re-stock",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -6,9 +6,13 @@ import CategoryCarousel from '../../screens/common/CategoryCarousel';
 import Slider from '@react-native-community/slider';
 import Colors from '../../constants/Colors';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Icon from 'react-native-vector-icons/Ionicons';
 import ProductCategory from '../../models/productCategory';
 import StockLabel from '../ui/stock-label';
+import CardInput from '../ui/card-input';
+import DeviceInfo from '../../utils/device-info';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import EstimatedTimeLabel from '../ui/est-time-label';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 interface IProps{
    // onAdd: PropTypes.
@@ -18,6 +22,7 @@ const ProductUpdate = (props: any) => {
 
     const [product, setProduct] = useState<Product>(props.product? props.product : {price: 0.00} as Product);
     const [priceText, setPriceText] = useState<string>(product.price? product.price.toString() : '0.00');
+    const [showAltAttributes, setShowAltAttributes] = useState<boolean>(false);
 
     const categories: ProductCategory[] = props.categories;
     const categoryItems = categories.filter(cat => cat.title.length > 0).map((cat:ProductCategory) => { 
@@ -42,6 +47,10 @@ const ProductUpdate = (props: any) => {
 
     const handleStockChange = (value: number) => { setProduct({...product, stockPercentage: value}); }
 
+    const handleEstLiveDaysChange = (value: number) => { setProduct({...product, estLiveDays: value}); }
+
+    const handleExpiryDaysChange = (value: number) => { setProduct({...product, estExpiryDays: value}); } 
+
     const handleImageChange  = (url: string) => { setProduct({...product, imageUrl: url}); }
 
     const handleDescriptionChange  = (text: string) => { setProduct({...product, description: text}); }
@@ -61,78 +70,144 @@ const ProductUpdate = (props: any) => {
                 selectedValue={product.category}
                 isVisible={false}
             />
-            
+            <View style={styles.headerContainer}>
+                <View>
+                    <Text style={styles.headerText}>{product.id? 'Update your stock item': 'Create your stock item'}</Text>
+                </View>
+                <FontAwesome.Button 
+                    name="eye-slash" 
+                    size={24}  
+                    style={styles.altInfoButton}
+                    backgroundColor="transparent"
+                    color={'black'}
+                    onPress={() => setShowAltAttributes(showAltAttributes => !showAltAttributes)}>
+                        More info...
+                </FontAwesome.Button>           
+            </View>
             <View style={styles.inputsContainer}>
-                <View style={{...styles.category, ...(Platform.OS !== 'android' && {zIndex: 10})}}>
-                    <Text style={styles.textLabel}>Type: </Text>
-                    <DropDownPicker
-                        items={categoryItems}
-                        defaultValue={selectedCategory? product.category: ''}
-                        containerStyle={{height: 40}}
-                        style={{backgroundColor: '#fafafa'}}
-                        itemStyle={{
-                            justifyContent: 'flex-start'
-                        }}
-                        dropDownStyle={{backgroundColor: '#fafafa'}}
-                        onChangeItem={item => handleCategoryChange(item.value)}
-                        dropDownMaxHeight={300}
-                        zIndex={3000}
-                    />
-                </View>
+                {!showAltAttributes && 
                 <View>
-                    <Text style={styles.textLabel}>Name/Title:</Text> 
-                    <CustomTextInput 
-                        placeholder='Product Name'
-                        onChangeText={handleTitleChange}
-                        value={product.title}
-                    />
-                </View>
-                <View>
-                    <Text style={styles.textLabel}>Price/Cost €:</Text> 
-                    <CustomTextInput 
-                        onChangeText={(text: any) => handlePriceChange(text)}
-                        placeholder='Product Price'
-                        value={priceText}
-                        style={{...styles.textInput, ...styles.fullInput}}
-                        keyboardType='decimal-pad'
-                    />     
-                </View>
-                <View>
-                    <Text style={styles.textLabel}>Image url/link:</Text> 
-                    <CustomTextInput 
-                        onChangeText={handleImageChange}
-                        placeholder='http://...'
-                        value={product.imageUrl}
-                        style={{...styles.textInput, ...styles.fullInput}}
-                        maxLength={1024}
-                    />     
-                </View>
-                <View>
-                    <Text style={styles.textLabel}>Description:</Text> 
-                    <CustomTextInput 
-                        onChangeText={handleDescriptionChange}
-                        placeholder='Describe the product...'
-                        value={product.description}
-                        style={{...styles.textInput, ...styles.fullInput}}
-                        maxLength={1024}
-                    />     
-                </View>
-                <View style={styles.value}>
-                    <View style={styles.inputGroup}>
-                        <Text style={styles.textLabel}>Remaining:</Text>
-                        <StockLabel stockPercentage={product.stockPercentage} style={{fontSize: 10, width: 160, marginRight: 0}} />
+                    <View style={{...styles.category, ...(Platform.OS !== 'android' && {zIndex: 10})}}>
+                        <Text style={styles.textLabel}>Type: </Text>
+                        <DropDownPicker
+                            items={categoryItems}
+                            defaultValue={selectedCategory? product.category: ''}
+                            containerStyle={{height: 40}}
+                            style={{backgroundColor: '#fafafa'}}
+                            itemStyle={{
+                                justifyContent: 'flex-start'
+                            }}
+                            dropDownStyle={{backgroundColor: '#fafafa'}}
+                            onChangeItem={item => handleCategoryChange(item.value)}
+                            dropDownMaxHeight={300}
+                            zIndex={3000}
+                        />
                     </View>
-                    <Slider
-                        style={styles.valueSlider}
-                        minimumValue={0}
-                        maximumValue={100}
-                        minimumTrackTintColor="green"
-                        maximumTrackTintColor="red"
-                        onValueChange={handleStockChange}
-                        value={product.stockPercentage? product.stockPercentage: 0}
-                        
-                    />
+                    <View>
+                        <Text style={styles.textLabel}>Name/Title:</Text> 
+                        <CustomTextInput 
+                            placeholder='Product Name'
+                            onChangeText={handleTitleChange}
+                            value={product.title}
+                        />
+                    </View>
+                    <View>
+                        <Text style={styles.textLabel}>Price/Cost €:</Text> 
+                        <CustomTextInput 
+                            onChangeText={(text: any) => handlePriceChange(text)}
+                            placeholder='Product Price'
+                            value={priceText}
+                            style={{...styles.textInput, ...styles.fullInput}}
+                            keyboardType='decimal-pad'
+                        />     
+                    </View>
+
+                    <View>
+                        <Text style={styles.textLabel}>Description:</Text> 
+                        <CustomTextInput 
+                            onChangeText={handleDescriptionChange}
+                            placeholder='Describe the product...'
+                            value={product.description}
+                            style={{...styles.textInput, ...styles.fullInput}}
+                            maxLength={1024}
+                        />     
+                    </View>
+                    <View style={styles.value}>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.textLabel}>Remaining:</Text>
+                            <StockLabel stockPercentage={product.stockPercentage} style={{fontSize: 10, width: 160, marginRight: 0}} />
+                        </View>
+                        <Slider
+                            style={styles.valueSlider}
+                            minimumValue={0}
+                            maximumValue={100}
+                            minimumTrackTintColor="green"
+                            maximumTrackTintColor="red"
+                            onValueChange={handleStockChange}
+                            value={product.stockPercentage? product.stockPercentage: 0}
+                            
+                        />
+                    </View>
                 </View>
+                }
+                {
+                showAltAttributes &&
+                <View>
+                    <View style={styles.inputGroup}>
+                        <Text style={styles.prodTitle}>{product.title}</Text>
+                    </View>
+                    <View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.textLabel}>
+                                Runs-out in:
+                            </Text> 
+                            <EstimatedTimeLabel days={product.estLiveDays} style={{fontSize: 10, width: 160, marginRight: 0}} />
+                        </View>   
+                        <View style={styles.cardInputs}>
+                            <Slider
+                                style={styles.valueSlider}
+                                minimumValue={0}
+                                maximumValue={32}
+                                minimumTrackTintColor="green"
+                                maximumTrackTintColor="red"
+                                onValueChange={handleEstLiveDaysChange}
+                                value={product.estLiveDays? product.estLiveDays: 0}              
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.textLabel}>
+                                Expires within:
+                            </Text> 
+                            <EstimatedTimeLabel days={product.estExpiryDays} style={{fontSize: 10, width: 160, marginRight: 0}} />
+                        </View>   
+                        <View style={styles.cardInputs}>
+                            <Slider
+                                style={styles.valueSlider}
+                                minimumValue={0}
+                                maximumValue={32}
+                                minimumTrackTintColor="green"
+                                maximumTrackTintColor="red"
+                                onValueChange={handleExpiryDaysChange}
+                                value={product.estExpiryDays? product.estExpiryDays: 0}              
+                            />
+                        </View>
+                    </View>
+                    <View>
+                        <Text style={styles.textLabel}>
+                            Image url/link:
+                        </Text> 
+                        <CustomTextInput 
+                            onChangeText={handleImageChange}
+                            placeholder='http://...'
+                            value={product.imageUrl}
+                            style={{...styles.textInput, ...styles.fullInput}}
+                            maxLength={1024}
+                        />     
+                    </View>                    
+                </View>
+                }
                 <View style={styles.inputGroup}>
                     <View style={styles.button}>
                         <Button 
@@ -160,9 +235,7 @@ const ProductUpdate = (props: any) => {
                             />    
                         </View>  
                     }
-                </View>
-
-                            
+                </View>                          
             </View>            
         </View>   
     )
@@ -234,6 +307,31 @@ const styles = StyleSheet.create({
     textLabel:{
         fontWeight: 'bold',
         textTransform: 'uppercase'
+    },
+    prodTitle:{
+        color: 'gray',
+        fontWeight: 'bold',
+        textTransform: 'uppercase'
+    },
+    cardInputs:{
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+    },
+    headerContainer:{
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    headerText:{
+        textTransform: 'uppercase',
+        fontWeight: 'bold',
+        color: 'gray'
+    },
+    altInfoButton:{
+        marginRight: 0,
+        marginTop: -10,
+        overflow: 'hidden',
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
     }
 });
 

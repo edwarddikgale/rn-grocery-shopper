@@ -102,7 +102,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         paddingLeft: 15,
-        marginHorizontal: 5
+        marginHorizontal: 5,
+        marginVertical: 5
     },
     backRightBtn: {
         alignItems: 'flex-end',
